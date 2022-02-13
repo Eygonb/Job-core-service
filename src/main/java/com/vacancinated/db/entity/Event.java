@@ -1,4 +1,4 @@
-package org.acme.getting.dbwork;
+package com.vacancinated.db.entity;
 
 
 import java.util.UUID;
@@ -36,6 +36,9 @@ public class Event {
 
     @Column(name="end_date")
     private ZonedDateTime endDate;
+
+    @Column(name="notify_for")
+    private Integer notifyFor;
 
     @Column
     private String notes;
@@ -114,7 +117,15 @@ public class Event {
     public void setEndDate(ZonedDateTime endDate){
         this.endDate = endDate;
     }
-           
+
+    public Integer getNotifyFor() {
+        return notifyFor;
+    }
+
+    public void setNotifyFor(Integer notifyFor) {
+        this.notifyFor = notifyFor;
+    }
+
     public Boolean getIsCompleted(){
         return isCompleted;
     }

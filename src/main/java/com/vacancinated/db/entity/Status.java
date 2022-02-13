@@ -1,4 +1,4 @@
-package org.acme.getting.dbwork;
+package com.vacancinated.db.entity;
 
 
 import lombok.EqualsAndHashCode;

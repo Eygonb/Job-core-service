@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package com.vacancinated.started;
 
 
 import javax.enterprise.context.ApplicationScoped;

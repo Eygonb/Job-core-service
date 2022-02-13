@@ -1,13 +1,10 @@
-package org.acme.getting.dbwork;
+package com.vacancinated.db.entity;
 
 import java.util.UUID;
 import java.time.ZonedDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 
 @Entity
