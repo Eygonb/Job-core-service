@@ -1,4 +1,4 @@
-package org.acme.getting.dbwork;
+package com.vega.entities;
 
 
 import java.util.UUID;

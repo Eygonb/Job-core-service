@@ -1,9 +1,7 @@
-package org.acme.getting.dbwork;
+package com.vega.entities;
 
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -39,6 +37,14 @@ public class Status {
         this.modifiedAt = modifiedAt;
     }
 
+    public StatusKey getKey(){
+        return key;
+    }
+
+    public void setKey(StatusKey key){
+        this.key = key;
+    }
+
     @EqualsAndHashCode
     @ToString
     @Embeddable
@@ -46,15 +52,26 @@ public class Status {
 
         static final long serialVersionUID = 1L;
 
-        @Getter
-        @Setter
         @Column(name="name_status")
         private String nameStatus;
 
-        @Getter
-        @Setter
         @Column(name="user_id")
         private String userId;
 
+        public String getNameStatus() {
+            return nameStatus;
+        }
+
+        public void setNameStatus(String nameStatus) {
+            this.nameStatus = nameStatus;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
     }
 }

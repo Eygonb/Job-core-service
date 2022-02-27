@@ -1,14 +1,10 @@
-package org.acme.getting.dbwork;
+package com.vega.entities;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.time.ZonedDateTime;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "vacancies")
@@ -47,6 +43,16 @@ public class Vacancy {
 
     @Column
     private String notes;
+
+    @OneToMany
+    @JoinColumn(name="vacancy_id")
+    private Collection<Event> events;
+
+    @OneToMany
+    @JoinColumn(name="vacancy_id")
+    private List<Contact> contacts;
+
+    public Vacancy(){}
 
     public UUID getId(){
         return id;
