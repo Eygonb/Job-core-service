@@ -1,7 +1,6 @@
-
 CREATE TABLE statuses
 (
-  name_status text not null unique,
+  name_status text not null,
   created_at timestamptz,
   modified_at timestamptz,
   user_id text not null,
@@ -14,8 +13,8 @@ CREATE TABLE vacancies
   id uuid not null,
   user_id text not null,
   name_vacancy text not null,
-  created_at timestamptz not null,
-  modified_at timestamptz not null,
+  created_at timestamptz,
+  modified_at timestamptz,
   location_latitude float,
   location_longitude float,
   status_name text,
@@ -64,7 +63,3 @@ CREATE TABLE contacts
   primary key(id),
   CONSTRAINT fk_vacancy FOREIGN KEY(vacancy_id)  REFERENCES vacancies(id)
 );
-
-
-
-
