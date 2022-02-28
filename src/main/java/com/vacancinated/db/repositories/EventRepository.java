@@ -1,9 +1,7 @@
 package com.vacancinated.db.repositories;
 
 import com.vacancinated.db.entity.Event;
-import io.quarkus.hibernate.orm.PersistenceUnit;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
