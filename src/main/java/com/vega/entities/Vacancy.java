@@ -1,5 +1,9 @@
 package com.vega.entities;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -10,8 +14,13 @@ import javax.persistence.*;
 @Table(name = "vacancies")
 public class Vacancy {
 
-    @Column
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name="user_id")
@@ -24,9 +33,11 @@ public class Vacancy {
     private String statusName;
 
     @Column(name="created_at")
+    @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at")
+    @Column(name="modified_at", updatable=false)
+    @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
     @Column(name="location_latitude")

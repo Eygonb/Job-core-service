@@ -1,19 +1,24 @@
 package com.vega.entities;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.UUID;
 import java.time.ZonedDateTime;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "events")
 public class Event {
 
-    @Column
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name="user_id")
@@ -26,9 +31,11 @@ public class Event {
     private String name;
 
     @Column(name="created_at")
+    @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at")
+    @Column(name="modified_at", updatable=false)
+    @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
     @Column(name="begin_date")
