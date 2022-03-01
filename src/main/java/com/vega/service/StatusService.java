@@ -31,8 +31,23 @@ public class StatusService {
         return repository.findById(id);
     }
 
+    public Status getByIdAndUserId(Status.StatusKey id, String userId) {
+        Status entity = repository.findById(id);
+        if (entity != null && entity.getKey().getUserId().equals(userId)) {
+            return entity;
+        }
+        return null;
+    }
+
     public Boolean delete(Status.StatusKey id) {
         return repository.deleteById(id);
+    }
+
+    public Boolean deleteWithUserId(Status.StatusKey id, String userId) {
+        if (getByIdAndUserId(id, userId) != null) {
+            return repository.deleteById(id);
+        }
+        return false;
     }
 
     public Status add(Status statusToSave) {
@@ -41,9 +56,6 @@ public class StatusService {
     }
 
     public Status update(Status.StatusKey id, Status status) {
-        Status upStatus = repository.findById(id);
-        upStatus.setKey(status.getKey());
-        return upStatus;
+        return repository.editStatus(id, status);
     }
 }
-

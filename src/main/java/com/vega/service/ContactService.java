@@ -32,11 +32,20 @@ public class ContactService {
         return repository.findById(id);
     }
 
+    public Contact getByIdAndUserId(UUID id, String userId) {
+        return repository.findByIdAndUserId(id, userId);
+    }
 
     public Boolean delete(UUID id) {
         return repository.deleteById(id);
     }
 
+    public Boolean deleteWithUserId(UUID id, String userId) {
+        if (repository.findByIdAndUserId(id, userId) != null) {
+            return repository.deleteById(id);
+        }
+        return false;
+    }
 
     public Contact add(Contact contactToSave) {
         contactToSave.setUserId(SecurityIdentity.USER_ATTRIBUTE);
@@ -44,22 +53,7 @@ public class ContactService {
         return repository.findById(contactToSave.getId());
     }
 
-    public Contact update(UUID id, Contact contactToSave) {
-        Contact contact = repository.findById(id);
-        contact.setFirstName(contactToSave.getFirstName());
-        contact.setLastName(contactToSave.getLastName());
-        contact.setCity(contactToSave.getCity());
-        contact.setCompany(contactToSave.getCompany());
-        contact.setSkype(contactToSave.getSkype());
-        contact.setTelegram(contactToSave.getTelegram());
-        contact.setTelephone(contactToSave.getTelephone());
-        contact.setNotes(contactToSave.getNotes());
-        contact.setMail(contactToSave.getMail());
-        contact.setPosition(contactToSave.getPosition());
-        contact.setVk(contactToSave.getVk());
-        contact.setVacancyId(contactToSave.getVacancyId());
-        repository.persist(contact);
-        return  contact;
+    public Contact update(UUID id, Contact contact) {
+        return repository.editContact(id, contact);
     }
 }
-
