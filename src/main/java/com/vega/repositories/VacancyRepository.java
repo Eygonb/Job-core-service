@@ -62,5 +62,20 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         return queryVacancy(sorts, filters).list().size();
     }
 
-
+    public Vacancy editVacancy(UUID id, Vacancy vacancyToSave) {
+        Session session = sessionFactory.openSession();
+        Vacancy vacancy = session.load(Vacancy.class, id);
+        //session.beginTransaction();
+        vacancy.setNameVacancy(vacancyToSave.getNameVacancy());
+        vacancy.setCompany(vacancyToSave.getCompany());
+        vacancy.setLocationLatitude(vacancyToSave.getLocationLatitude());
+        vacancy.setLocationLongitude(vacancyToSave.getLocationLongitude());
+        vacancy.setNotes(vacancyToSave.getNotes());
+        vacancy.setSalary(vacancyToSave.getSalary());
+        vacancy.setStatusName(vacancyToSave.getStatusName());
+        vacancy.setModifiedAt(ZonedDateTime.now());
+        session.saveOrUpdate(vacancy);
+        session.getTransaction().commit();
+        return vacancy;
+    }
 }
