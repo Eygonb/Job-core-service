@@ -21,33 +21,52 @@ import java.util.function.Predicate;
 
 @ApplicationScoped
 public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
-    public List<Contact> findAll(List<Sorter> sorts, List<Filter> filters, Page page)
-    {
+    public List<Contact> findAll(List<Sorter> sorts, List<Filter> filters, Page page) {
        /* Contact contact = new Contact();
         contact.setUserId(SecurityIdentity.USER_ATTRIBUTE);
         Predicate<Vacancy> predicateOne = vc -> vc.getUserId().equals(contact.getUserId());*/
-        String allFilters ="";
-        String allSorts ="";
-        for(int i=0;i<filters.size();i++)
-        {
-            allFilters+= " c."+filters.get(i).getProperty() + " " + filters.get(i).getFilterOperator() +
-                    " '" + filters.get(i).getValue()+"'";
-            if(i+1 <filters.size())
-                allFilters+=" and";
+        String allFilters = "";
+        String allSorts = "";
+        for (int i = 0; i < filters.size(); i++) {
+            allFilters += " c." + filters.get(i).getProperty() + " " + filters.get(i).getFilterOperator() +
+                    " '" + filters.get(i).getValue() + "'";
+            if (i + 1 < filters.size())
+                allFilters += " and";
             else
-                allFilters+=" ";
+                allFilters += " ";
         }
-        for (int j=0;j<sorts.size();j++)
-        {
-            allSorts+=" c."+sorts.get(j).getProperty() + " " + sorts.get(0).getSortDirection();
-            if(j+1<sorts.size())
-                allSorts+=",";
+        for (int j = 0; j < sorts.size(); j++) {
+            allSorts += " c." + sorts.get(j).getProperty() + " " + sorts.get(0).getSortDirection();
+            if (j + 1 < sorts.size())
+                allSorts += ",";
         }
         PanacheQuery<Contact> queryContact = find("select * from contacts c " +
-                "where"+ allFilters + "order by" + allSorts).page(page);
+                "where" + allFilters + "order by" + allSorts).page(page);
         return queryContact.list();
-
     }
 
+    public Contact findByIdAndUserId(UUID id, String userId) {
+        return find("id = ?1 and user_id = ?2", id, userId).firstResult();
+    }
 
+    public Contact editContact(UUID id, Contact contactToSave){
+        Contact contact = findById(id);
+
+        contact.setVacancyId(contactToSave.getVacancyId());
+        contact.setUserId(contactToSave.getUserId());
+        contact.setCompany(contactToSave.getCompany());
+        contact.setNotes(contactToSave.getNotes());
+        contact.setFirstName(contactToSave.getFirstName());
+        contact.setLastName(contactToSave.getLastName());
+        contact.setModifiedAt(ZonedDateTime.now());
+        contact.setCity(contactToSave.getCity());
+        contact.setPosition(contactToSave.getPosition());
+        contact.setMail(contactToSave.getMail());
+        contact.setTelegram(contactToSave.getTelegram());
+        contact.setVk(contactToSave.getVk());
+        contact.setSkype(contactToSave.getSkype());
+        contact.setTelephone(contactToSave.getTelephone());
+
+        return contact;
+    }
 }

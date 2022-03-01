@@ -37,6 +37,24 @@ public class EventRepository implements PanacheRepositoryBase<Event,UUID> {
         PanacheQuery<Event> queryEvent = find("select * from events ev " +
                 "where"+ allFilters + "order by" + allSorts).page(page);
         return queryEvent.list();
+    }
 
+    public Event findByIdAndUserId(UUID id, String userId) {
+        return find("id = ?1 and user_id = ?2", id, userId).firstResult();
+    }
+
+    public Event editEvent(UUID id, Event eventToSave) {
+        Session session = sessionFactory.openSession();
+        Event event = session.load(Event.class, id);
+        event.setVacancyId(eventToSave.getVacancyId());
+        event.setModifiedAt(ZonedDateTime.now());
+        event.setName(eventToSave.getName());
+        event.setNotes(eventToSave.getNotes());
+        event.setBeginDate(eventToSave.getBeginDate());
+        event.setEndDate(eventToSave.getEndDate());
+        event.setIsCompleted(eventToSave.getIsCompleted());
+        session.saveOrUpdate(event);
+        session.getTransaction().commit();
+        return event;
     }
 }

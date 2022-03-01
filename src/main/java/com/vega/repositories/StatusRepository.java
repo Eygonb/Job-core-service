@@ -43,8 +43,16 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
         PanacheQuery<Status> queryStatus = find("select * from statuses s " +
                 "where"+ allFilters + "order by" + allSorts).page(page);
         return queryStatus.list();
-
     }
 
+    public Status editStatus(Status.StatusKey key, Status statusToSave) {
+        Session session = sessionFactory.openSession();
+        Status status = session.load(Status.class, key);
+        status.setModifiedAt(ZonedDateTime.now());
+        status.setKey(statusToSave.getKey());
+        session.saveOrUpdate(status);
+        session.getTransaction().commit();
+        return status;
 
+    }
 }
