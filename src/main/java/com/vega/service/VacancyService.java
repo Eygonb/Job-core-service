@@ -31,8 +31,19 @@ public class VacancyService {
         return repository.findById(id);
     }
 
+    public Vacancy getByIdAndUserId(UUID id, String userId) {
+        return repository.findByIdAndUserId(id, userId);
+    }
+
     public Boolean delete(UUID id) {
         return repository.deleteById(id);
+    }
+
+    public Boolean deleteWithUserId(UUID id, String userId) {
+        if (repository.findByIdAndUserId(id, userId) != null) {
+            return repository.deleteById(id);
+        }
+        return false;
     }
 
     public Vacancy add(Vacancy vacancyToSave) {
@@ -41,15 +52,6 @@ public class VacancyService {
     }
 
     public Vacancy update(UUID id, Vacancy vacancy) {
-        Vacancy upVacancy = repository.findById(id);
-        upVacancy.setNameVacancy(vacancy.getNameVacancy());
-        upVacancy.setStatusName(vacancy.getStatusName());
-        upVacancy.setLocationLatitude(vacancy.getLocationLatitude());
-        upVacancy.setLocationLongitude(vacancy.getLocationLongitude());
-        upVacancy.setCompany(vacancy.getCompany());
-        upVacancy.setSalary(vacancy.getSalary());
-        upVacancy.setNotes(vacancy.getNotes());
-        //repository.persist(upVacancy);
-        return  upVacancy;
+        return repository.editVacancy(id, vacancy);
     }
 }

@@ -32,8 +32,19 @@ public class EventService {
         return repository.findById(id);
     }
 
+    public Event getByIdAndUserId(UUID id, String userId) {
+        return repository.findByIdAndUserId(id, userId);
+    }
+
     public Boolean delete(UUID id) {
         return repository.deleteById(id);
+    }
+
+    public Boolean deleteWithUserId(UUID id, String userId) {
+        if (repository.findByIdAndUserId(id, userId) != null) {
+            return repository.deleteById(id);
+        }
+        return false;
     }
 
     public Event add(Event eventToSave) {
@@ -41,15 +52,7 @@ public class EventService {
         return repository.findById(eventToSave.getId());
     }
 
-    public Event update(UUID id, Event eventToSave) {
-        Event event = repository.findById(id);
-        event.setName(eventToSave.getName());
-        event.setBeginDate(eventToSave.getBeginDate());
-        event.setEndDate(eventToSave.getEndDate());
-        event.setIsCompleted(eventToSave.getIsCompleted());
-        event.setVacancyId(eventToSave.getVacancyId());
-        repository.persist(event);
-        return  event;
+    public Event update(UUID id, Event event) {
+        return repository.editEvent(id, event);
     }
 }
-
