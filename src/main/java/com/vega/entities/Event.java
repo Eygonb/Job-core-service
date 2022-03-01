@@ -1,6 +1,5 @@
 package com.vega.entities;
 
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,7 +11,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "events")
 public class Event {
-
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -36,7 +34,7 @@ public class Event {
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at")
+    @Column(name="modified_at", updatable=false)
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
