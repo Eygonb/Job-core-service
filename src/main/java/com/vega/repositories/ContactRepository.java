@@ -44,5 +44,24 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
         return find("id = ?1 and user_id = ?2", id, userId).firstResult();
     }
 
+    public Contact editContact(UUID id, Contact contactToSave){
+        Contact contact = findById(id);
 
+        contact.setVacancyId(contactToSave.getVacancyId());
+        contact.setUserId(contactToSave.getUserId());
+        contact.setCompany(contactToSave.getCompany());
+        contact.setNotes(contactToSave.getNotes());
+        contact.setFirstName(contactToSave.getFirstName());
+        contact.setLastName(contactToSave.getLastName());
+        contact.setModifiedAt(ZonedDateTime.now());
+        contact.setCity(contactToSave.getCity());
+        contact.setPosition(contactToSave.getPosition());
+        contact.setMail(contactToSave.getMail());
+        contact.setTelegram(contactToSave.getTelegram());
+        contact.setVk(contactToSave.getVk());
+        contact.setSkype(contactToSave.getSkype());
+        contact.setTelephone(contactToSave.getTelephone());
+
+        return contact;
+    }
 }
