@@ -1,29 +1,26 @@
 package com.vega.repositories;
 
 import com.vega.entities.Vacancy;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.annotations.Where;
-import org.hibernate.sql.Select;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.management.Query;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @ApplicationScoped
-public class VacancyRepository implements PanacheRepository<Vacancy> {
+public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
 
     private SessionFactory sessionFactory;
 
-    public Vacancy addVacancy(Vacancy vacancyToSave)
-    {
+    // Может быть удален из-за существования метода persist, определенного в PanacheRepositoryBase
+    // (created_at и modified_at автоматически выставляются hibernate'ом из-за аннотаций перед этими полями
+    // в классах сущностей, id также автоматически генерируется)
+    public Vacancy addVacancy(Vacancy vacancyToSave) {
         Vacancy vacancy = new Vacancy();
         Session session = sessionFactory.openSession();
-       // session.beginTransaction();
+        // session.beginTransaction();
         vacancy.setNameVacancy(vacancyToSave.getNameVacancy());
         vacancy.setCompany(vacancyToSave.getCompany());
         vacancy.setUserId(vacancyToSave.getUserId());
@@ -41,10 +38,10 @@ public class VacancyRepository implements PanacheRepository<Vacancy> {
 
     }
 
-    public Boolean deleteVacancy(UUID id)
-    {
+    // Может быть удален из-за существования метода deleteById, определенного в PanacheRepositoryBase
+    public Boolean deleteVacancy(UUID id) {
         Session session = sessionFactory.openSession();
-       // session.beginTransaction();
+        // session.beginTransaction();
         Vacancy vacancy = new Vacancy();
         vacancy.setId(id);
         session.delete(vacancy);
@@ -52,18 +49,20 @@ public class VacancyRepository implements PanacheRepository<Vacancy> {
         return true;
     }
 
-    public Vacancy getVacancy(UUID id)
-    {
+    // Может быть удален из-за существования метода findById, определенного в PanacheRepositoryBase
+    public Vacancy getVacancy(UUID id) {
         Session session = sessionFactory.openSession();
-        return session.get(Vacancy.class,id);
-       // return (Vacancy)session.createQuery("Select v From Vacancy v Where id == v.getId().toString()");
-
+        return session.get(Vacancy.class, id);
+        // return (Vacancy)session.createQuery("Select v From Vacancy v Where id == v.getId().toString()");
     }
 
-    public Vacancy editVacancy(UUID id, Vacancy vacancyToSave)
-    {
+    public Vacancy findByIdAndUserId(UUID id, String userId) {
+        return find("id = ?1 and user_id = ?2", id, userId).firstResult();
+    }
+
+    public Vacancy editVacancy(UUID id, Vacancy vacancyToSave) {
         Session session = sessionFactory.openSession();
-        Vacancy vacancy = session.load(Vacancy.class,id);
+        Vacancy vacancy = session.load(Vacancy.class, id);
         //session.beginTransaction();
         vacancy.setNameVacancy(vacancyToSave.getNameVacancy());
         vacancy.setCompany(vacancyToSave.getCompany());

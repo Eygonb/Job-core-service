@@ -1,7 +1,7 @@
 package com.vega.repositories;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import com.vega.entities.Contact;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -10,15 +10,17 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @ApplicationScoped
-public class ContactRepository implements PanacheRepository<Contact> {
+public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
 
     private SessionFactory sessionFactory;
 
-    public Contact addContact(Contact contactToSave)
-    {
+    // Может быть удален из-за существования метода persist, определенного в PanacheRepositoryBase
+    // (created_at и modified_at автоматически выставляются hibernate'ом из-за аннотаций перед этими полями
+    // в классах сущностей, id также автоматически генерируется)
+    public Contact addContact(Contact contactToSave) {
         Contact contact = new Contact();
         Session session = sessionFactory.openSession();
-       // session.beginTransaction();
+        // session.beginTransaction();
         contact.setVacancyId(contactToSave.getVacancyId());
         contact.setCompany(contactToSave.getCompany());
         contact.setNotes(contactToSave.getNotes());
@@ -40,10 +42,10 @@ public class ContactRepository implements PanacheRepository<Contact> {
 
     }
 
-    public Boolean deleteContact(UUID id)
-    {
+    // Может быть удален из-за существования метода deleteById, определенного в PanacheRepositoryBase
+    public Boolean deleteContact(UUID id) {
         Session session = sessionFactory.openSession();
-       // session.beginTransaction();
+        // session.beginTransaction();
         Contact contact = new Contact();
         contact.setId(id);
         session.delete(contact);
@@ -51,18 +53,19 @@ public class ContactRepository implements PanacheRepository<Contact> {
         return true;
     }
 
-    public Contact getContact(UUID id)
-    {
+    // Может быть удален из-за существования метода findById, определенного в PanacheRepositoryBase
+    public Contact getContact(UUID id) {
         Session session = sessionFactory.openSession();
-        return session.get(Contact.class,id);
-
+        return session.get(Contact.class, id);
     }
 
-    public Contact editContact(UUID id, Contact contactToSave)
-    {
-        Session session = sessionFactory.openSession();
-        Contact contact = session.load(Contact.class,id);
-      //  session.beginTransaction();
+    public Contact findByIdAndUserId(UUID id, String userId) {
+        return find("id = ?1 and user_id = ?2", id, userId).firstResult();
+    }
+
+    public Contact editContact(UUID id, Contact contactToSave) {
+        Contact contact = findById(id);
+
         contact.setVacancyId(contactToSave.getVacancyId());
         contact.setUserId(contactToSave.getUserId());
         contact.setCompany(contactToSave.getCompany());
@@ -77,8 +80,7 @@ public class ContactRepository implements PanacheRepository<Contact> {
         contact.setVk(contactToSave.getVk());
         contact.setSkype(contactToSave.getSkype());
         contact.setTelephone(contactToSave.getTelephone());
-        session.saveOrUpdate(contact);
-        session.getTransaction().commit();
+
         return contact;
 
     }

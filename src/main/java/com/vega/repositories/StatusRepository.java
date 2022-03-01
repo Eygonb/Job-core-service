@@ -1,21 +1,22 @@
 package com.vega.repositories;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import com.vega.entities.Status;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 @ApplicationScoped
-public class StatusRepository implements PanacheRepository<Status> {
+public class StatusRepository implements PanacheRepositoryBase<Status, Status.StatusKey> {
 
     private SessionFactory sessionFactory;
 
-    public Status addStatus(Status statusToSave)
-    {
+    // Может быть удален из-за существования метода persist, определенного в PanacheRepositoryBase
+    // (created_at и modified_at автоматически выставляются hibernate'ом из-за аннотаций перед этими полями
+    // в классах сущностей, id также автоматически генерируется)
+    public Status addStatus(Status statusToSave) {
         Status status = new Status();
         Session session = sessionFactory.openSession();
         status.setCreatedAt(ZonedDateTime.now());
@@ -27,8 +28,8 @@ public class StatusRepository implements PanacheRepository<Status> {
 
     }
 
-    public Boolean deleteStatus(Status.StatusKey key)
-    {
+    // Может быть удален из-за существования метода deleteById, определенного в PanacheRepositoryBase
+    public Boolean deleteStatus(Status.StatusKey key) {
         Session session = sessionFactory.openSession();
         Status status = new Status();
         status.setKey(key);
@@ -37,17 +38,16 @@ public class StatusRepository implements PanacheRepository<Status> {
         return true;
     }
 
-    public Status getStatus(Status.StatusKey key)
-    {
+    // Может быть удален из-за существования метода findById, определенного в PanacheRepositoryBase
+    public Status getStatus(Status.StatusKey key) {
         Session session = sessionFactory.openSession();
-        return session.get(Status.class,key);
+        return session.get(Status.class, key);
 
     }
 
-    public Status editStatus(Status.StatusKey key, Status statusToSave)
-    {
+    public Status editStatus(Status.StatusKey key, Status statusToSave) {
         Session session = sessionFactory.openSession();
-        Status status = session.load(Status.class,key);
+        Status status = session.load(Status.class, key);
         status.setModifiedAt(ZonedDateTime.now());
         status.setKey(statusToSave.getKey());
         session.saveOrUpdate(status);
