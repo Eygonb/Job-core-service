@@ -1,11 +1,13 @@
 package com.vega.service;
 
 import com.vega.entities.Event;
+import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.EventRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.security.identity.SecurityIdentity;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
@@ -62,10 +64,6 @@ public class EventService {
         return  event;
     }
 
-
-    public List<Event> getByUserId(String userId) {
-        return repository.findByUserId(userId);
-    }
 
     public List<Event> getByUserId(String userId) {
         return repository.findByUserId(userId);
