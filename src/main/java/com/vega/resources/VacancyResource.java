@@ -1,9 +1,8 @@
 package com.vega.resources;
 
 import com.vega.entities.Vacancy;
-import com.vega.repositories.VacancyRepository;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import io.quarkus.panache.common.Page;
+import com.vega.service.VacancyService;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -13,67 +12,79 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class VacancyResource {
-
     @Inject
-    VacancyRepository vacancyRepository;
+    JsonWebToken jwt;
+    @Inject
+    VacancyService service;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllVacancy(@QueryParam("sort") List<String> sortQuery,
-                                  @QueryParam("page") @DefaultValue("0") int pageIndex,
-                                  @QueryParam("size") @DefaultValue("20") int pageSize){
-        Page page = Page.of(pageIndex, pageSize);
-      //  Sort sort = getSortFromQuery(sortQuery);
-        List<Vacancy> vacancy = vacancyRepository.findAll().page(page).list();
-        return Response.ok(vacancy).build();
-
+    public Response getAllVacancies(@QueryParam("sort") List<String> sortQuery,
+                                   @QueryParam("page") @DefaultValue("0") int pageIndex,
+                                   @QueryParam("size") @DefaultValue("20") int pageSize) {
+        if (checkJwt()) {
+            List<Vacancy> vacancies = service.getAll(sortQuery, pageIndex, pageSize);
+            return Response.ok(vacancies).build();
+        }
+        return Response.status(401).build();
     }
 
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOne(@PathParam("id") UUID id){
-        Vacancy vacancy = vacancyRepository.getVacancy(id);
-        if (vacancy == null) {
-            throw new WebApplicationException(404);
+    public Response getOne(@PathParam("id") UUID id) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            Vacancy vacancy = service.getByIdAndUserId(id, userId);
+            if (vacancy == null) {
+                return Response.status(404).build();
+            }
+            return Response.ok(vacancy).build();
         }
-        return Response.ok(vacancy).build();
+        return Response.status(401).build();
     }
 
     @Transactional
     @DELETE
     @Path("{id}")
-    public void deleteVacancyById(UUID id) {
-        if (!vacancyRepository.deleteVacancy(id)) {
-            throw new WebApplicationException(404);
+    public Response deleteVacancyById(UUID id) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            if (!service.deleteWithUserId(id, userId)) {
+                return Response.status(404).build();
+            }
         }
+        return Response.status(401).build();
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response createVacancy(Vacancy vacancyToSave){
-        Vacancy vacancy = vacancyRepository.addVacancy(vacancyToSave);
-        //return  Response.status(401).build();
-        return Response.ok(vacancy).build();
+    public Response createVacancy(Vacancy vacancyToSave) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            Vacancy vacancy = service.add(vacancyToSave);
+            return Response.ok(vacancy).build();
+        }
+        return Response.status(401).build();
     }
 
     @PUT
     @Path("{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response edit(UUID id, Vacancy vacancyToSave){
-        if(vacancyRepository.getVacancy(id)==null)
-        {
-          //  Vacancy vacancy = vacancyRepository.editVacancy(id, vacancyToSave);
-            return Response.status(204).build();
+    public Response edit(UUID id, Vacancy vacancyToSave) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            if (service.get(id) == null) {
+                return Response.status(204).build();
+            }
+            Vacancy vacancy = service.update(id, vacancyToSave);
+            return Response.ok(vacancy).build();
         }
-        Vacancy vacancy = vacancyRepository.editVacancy(id,vacancyToSave);
-        //return  Response.status(401).build();
-        return Response.ok(vacancy).build();
+        return Response.status(401).build();
+    }
 
+    private boolean checkJwt() {
+        return jwt.containsClaim("sub") && jwt.getClaim("sub") != null;
     }
 }

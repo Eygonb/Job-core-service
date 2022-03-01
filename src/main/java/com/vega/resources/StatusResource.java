@@ -1,10 +1,8 @@
 package com.vega.resources;
 
-
 import com.vega.entities.Status;
-import com.vega.repositories.StatusRepository;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import io.quarkus.panache.common.Page;
+import com.vega.service.StatusService;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -12,70 +10,80 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.UUID;
 
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class StatusResource {
-
-
     @Inject
-    StatusRepository statusRepository;
+    JsonWebToken jwt;
+    @Inject
+    StatusService service;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllStatuses(@QueryParam("sort") List<String> sortQuery,
-                                 @QueryParam("page") @DefaultValue("0") int pageIndex,
-                                 @QueryParam("size") @DefaultValue("20") int pageSize){
-        Page page = Page.of(pageIndex, pageSize);
-        //  Sort sort = getSortFromQuery(sortQuery);
-        List<Status> statuses = statusRepository.findAll().page(page).list();
-        return Response.ok(statuses).build();
-
+                                   @QueryParam("page") @DefaultValue("0") int pageIndex,
+                                   @QueryParam("size") @DefaultValue("20") int pageSize) {
+        if (checkJwt()) {
+            List<Status> statuses = service.getAll(sortQuery, pageIndex, pageSize);
+            return Response.ok(statuses).build();
+        }
+        return Response.status(401).build();
     }
 
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOne(@PathParam("id")Status.StatusKey key){
-        Status status = statusRepository.getStatus(key);
-        if (status == null) {
-            throw new WebApplicationException(404);
+    public Response getOne(@PathParam("id") Status.StatusKey id) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            Status status = service.getByIdAndUserId(id, userId);
+            if (status == null) {
+                return Response.status(404).build();
+            }
+            return Response.ok(status).build();
         }
-        return  Response.ok(status).build();
-      //  return status;
+        return Response.status(401).build();
     }
 
     @Transactional
     @DELETE
     @Path("{id}")
-    public void deleteStatusByKey(Status.StatusKey key) {
-        if (!statusRepository.deleteStatus(key)) {
-            throw new WebApplicationException(404);
+    public Response deleteStatusById(Status.StatusKey id) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            if (!service.deleteWithUserId(id, userId)) {
+                return Response.status(404).build();
+            }
         }
+        return Response.status(401).build();
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response createStatus(Status statusToSave){
-        Status status = statusRepository.addStatus(statusToSave);
-        //return  Response.status(401).build();
-        return Response.ok(status).build();
+    public Response createStatus(Status statusToSave) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            Status status = service.add(statusToSave);
+            return Response.ok(status).build();
+        }
+        return Response.status(401).build();
     }
 
     @PUT
     @Path("{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response edit(Status.StatusKey key, Status statusToSave){
-        if(statusRepository.getStatus(key)==null)
-        {
-            return Response.status(204).build();
+    public Response edit(Status.StatusKey id, Status statusToSave) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            if (service.get(id) == null) {
+                return Response.status(204).build();
+            }
+            Status status = service.update(id, statusToSave);
+            return Response.ok(status).build();
         }
-        Status status = statusRepository.editStatus(key, statusToSave);
-        //return  Response.status(401).build();
-        return Response.ok(status).build();
+        return Response.status(401).build();
+    }
 
+    private boolean checkJwt() {
+        return jwt.containsClaim("sub") && jwt.getClaim("sub") != null;
     }
 }
