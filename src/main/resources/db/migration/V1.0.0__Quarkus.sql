@@ -1,6 +1,6 @@
 CREATE TABLE statuses
 (
-  name_status text not null,
+  name_status text not null unique,
   created_at timestamptz,
   modified_at timestamptz,
   user_id text not null,
