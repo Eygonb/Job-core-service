@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class StatusResource {
-
-
+    @Inject
+    JsonWebToken jwt;
     @Inject
     StatusService service;
     Status.StatusKey key;
@@ -34,44 +36,73 @@ public class StatusResource {
     public Response getAll(@QueryParam("sort") List<Sorter> sorts, List<Filter> filters,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize){
-        return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
+        if (checkJwt()) {
+            return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
+        }
+        return Response.status(401).build();
     }
 
     @GET
     @Path("{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@PathParam("name") String name){
-        key.setNameStatus(name);
-        key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
-        return  Response.ok(service.get(key)).build();
+        if (checkJwt()) {
+            key.setNameStatus(name);
+            key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+
+            String userId = jwt.getClaim("sub");
+            Status status = service.getByIdAndUserId(key, userId);
+            if (status == null) {
+                return Response.status(404).build();
+            }
+            return Response.ok(status).build();
+        }
+        return Response.status(401).build();
     }
 
     @Transactional
     @DELETE
     public void deleteStatusByKey(String name) {
-        key.setNameStatus(name);
-        key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
-        if (!service.delete(key)) {
-            throw new WebApplicationException(404);
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            key.setNameStatus(name);
+            key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+            if (!service.deleteWithUserId(key, userId)) {
+                return Response.status(404).build();
+            }
         }
+        return Response.status(401).build();
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response createStatus(Status status){
-        return Response.ok(service.add(status)).build();
+    public Response createStatus(Status statusToSave) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            Status status = service.add(statusToSave);
+            return Response.ok(status).build();
+        }
+        return Response.status(401).build();
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{id}")
     @Transactional
     public Response edit(String name, Status status){
-        key.setNameStatus(name);
-        key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
-        return Response.ok(service.update(key,status)).build();
+        if (checkJwt()) {
+            key.setNameStatus(name);
+            key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+            String userId = jwt.getClaim("sub");
+            if (service.get(id) == null) {
+                return Response.status(204).build();
+            }
+            Status status = service.update(key, statusToSave);
+            return Response.ok(status).build();
+        }
+        return Response.status(401).build();
+    }
 
+    private boolean checkJwt() {
+        return jwt.containsClaim("sub") && jwt.getClaim("sub") != null;
     }
 }

@@ -7,7 +7,6 @@ import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.service.VacancyService;
-import io.quarkus.vertx.web.Header;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -18,72 +17,83 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-@Path("/vacancies")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class VacancyResource {
-
+    @Inject
+    JsonWebToken jwt;
     @Inject
     VacancyService service;
-
     @Inject
     ObjectMapper objectMapper;
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/all")
     public Response getAll(@QueryParam("sort") String sortParam, @QueryParam("filter") String filterParam,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
-        List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<>() {});
-        List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
-        int countVacancy = service.count(sorts, filters);
-        return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).
-                header("X-Total-Count", countVacancy).build();
+        if (checkJwt()) {
+//          List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<List<Sorter>>() {});
+            List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
+            return Response.ok(service.getAll(Collections.emptyList(), Collections.emptyList(),pageIndex,pageSize)).build();
+        }
+        return Response.status(401).build();
     }
 
     @GET
     @Path("{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") UUID id){
-        return Response.ok(service.get(id)).build();
+    public Response getOne(@PathParam("id") UUID id) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            Vacancy vacancy = service.getByIdAndUserId(id, userId);
+            if (vacancy == null) {
+                return Response.status(404).build();
+            }
+            return Response.ok(vacancy).build();
+        }
+        return Response.status(401).build();
     }
 
     @Transactional
     @DELETE
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public void delete(@PathParam("id") UUID id) {
-       service.delete(id);
+    public Response deleteVacancyById(UUID id) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            if (!service.deleteWithUserId(id, userId)) {
+                return Response.status(404).build();
+            }
+        }
+        return Response.status(401).build();
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response create(Vacancy vacancy){
-        return Response.ok(service.add(vacancy)).build();
+    public Response createVacancy(Vacancy vacancyToSave) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            Vacancy vacancy = service.add(vacancyToSave);
+            return Response.ok(vacancy).build();
+        }
+        return Response.status(401).build();
     }
 
     @PUT
     @Path("{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response edit(@PathParam("id") UUID id, Vacancy vacancy){
-        return Response.ok(service.update(id,vacancy)).build();
+    public Response edit(UUID id, Vacancy vacancyToSave) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            if (service.get(id) == null) {
+                return Response.status(204).build();
+            }
+            Vacancy vacancy = service.update(id, vacancyToSave);
+            return Response.ok(vacancy).build();
+        }
+        return Response.status(401).build();
+    }
+
+    private boolean checkJwt() {
+        return jwt.containsClaim("sub") && jwt.getClaim("sub") != null;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
