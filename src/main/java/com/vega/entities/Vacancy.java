@@ -36,7 +36,7 @@ public class Vacancy {
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at")
+    @Column(name="modified_at", updatable=false)
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 

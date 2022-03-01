@@ -1,6 +1,5 @@
 package com.vega.entities;
 
-
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +20,7 @@ public class Status {
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at")
+    @Column(name="modified_at", updatable=false)
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
