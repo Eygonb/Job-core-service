@@ -1,10 +1,17 @@
 package com.vega.resources;
 
 
+import com.vega.entities.Contact;
 import com.vega.entities.Status;
+import com.vega.entities.Vacancy;
+import com.vega.processing.Filter;
+import com.vega.processing.Sorter;
 import com.vega.repositories.StatusRepository;
+import com.vega.service.StatusService;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
+import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -13,42 +20,38 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class StatusResource {
 
 
     @Inject
-    StatusRepository statusRepository;
+    StatusService service;
+    Status.StatusKey key;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllStatuses(@QueryParam("sort") List<String> sortQuery,
-                                 @QueryParam("page") @DefaultValue("0") int pageIndex,
-                                 @QueryParam("size") @DefaultValue("20") int pageSize){
-        Page page = Page.of(pageIndex, pageSize);
-        //  Sort sort = getSortFromQuery(sortQuery);
-        List<Status> statuses = statusRepository.findAll().page(page).list();
-        return Response.ok(statuses).build();
-
+    public Response getAll(@QueryParam("sort") List<Sorter> sorts, List<Filter> filters,
+                           @QueryParam("page") @DefaultValue("0") int pageIndex,
+                           @QueryParam("size") @DefaultValue("20") int pageSize){
+        return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("{name}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getOne(@PathParam("id")Status.StatusKey key){
-        Status status = statusRepository.getStatus(key);
-        if (status == null) {
-            throw new WebApplicationException(404);
-        }
-        return  Response.ok(status).build();
-      //  return status;
+    public Response get(@PathParam("name") String name){
+        key.setNameStatus(name);
+        key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+        return  Response.ok(service.get(key)).build();
     }
 
     @Transactional
     @DELETE
-    @Path("{id}")
-    public void deleteStatusByKey(Status.StatusKey key) {
-        if (!statusRepository.deleteStatus(key)) {
+    public void deleteStatusByKey(String name) {
+        key.setNameStatus(name);
+        key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+        if (!service.delete(key)) {
             throw new WebApplicationException(404);
         }
     }
@@ -57,25 +60,18 @@ public class StatusResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response createStatus(Status statusToSave){
-        Status status = statusRepository.addStatus(statusToSave);
-        //return  Response.status(401).build();
-        return Response.ok(status).build();
+    public Response createStatus(Status status){
+        return Response.ok(service.add(status)).build();
     }
 
     @PUT
-    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response edit(Status.StatusKey key, Status statusToSave){
-        if(statusRepository.getStatus(key)==null)
-        {
-            return Response.status(204).build();
-        }
-        Status status = statusRepository.editStatus(key, statusToSave);
-        //return  Response.status(401).build();
-        return Response.ok(status).build();
+    public Response edit(String name, Status status){
+        key.setNameStatus(name);
+        key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+        return Response.ok(service.update(key,status)).build();
 
     }
 }

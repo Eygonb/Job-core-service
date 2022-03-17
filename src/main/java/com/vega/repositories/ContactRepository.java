@@ -1,85 +1,39 @@
 package com.vega.repositories;
 
+import com.vega.entities.Vacancy;
+import com.vega.processing.Filter;
+import com.vega.processing.Sorter;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import com.vega.entities.Contact;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import io.quarkus.panache.common.Page;
+import io.quarkus.security.identity.SecurityIdentity;
+
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.PersistenceException;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
+
 
 @ApplicationScoped
-public class ContactRepository implements PanacheRepository<Contact> {
-
-    private SessionFactory sessionFactory;
-
-    public Contact addContact(Contact contactToSave)
+public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
+    public List<Contact> findAll(List<Sorter> sorts, List<Filter> filters, Page page)
     {
-        Contact contact = new Contact();
-        Session session = sessionFactory.openSession();
-       // session.beginTransaction();
-        contact.setVacancyId(contactToSave.getVacancyId());
-        contact.setCompany(contactToSave.getCompany());
-        contact.setNotes(contactToSave.getNotes());
-        contact.setFirstName(contactToSave.getFirstName());
-        contact.setLastName(contactToSave.getLastName());
-        contact.setCreatedAt(ZonedDateTime.now());
-        contact.setModifiedAt(ZonedDateTime.now());
-        contact.setId(UUID.randomUUID());
-        contact.setCity(contactToSave.getCity());
-        contact.setPosition(contactToSave.getPosition());
-        contact.setMail(contactToSave.getMail());
-        contact.setTelegram(contactToSave.getTelegram());
-        contact.setVk(contactToSave.getVk());
-        contact.setSkype(contactToSave.getSkype());
-        contact.setTelephone(contactToSave.getTelephone());
-        session.saveOrUpdate(contact);
-        session.getTransaction().commit();
-        return contact;
+       /* Contact contact = new Contact();
+        contact.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+        Predicate<Vacancy> predicateOne = vc -> vc.getUserId().equals(contact.getUserId());*/
+        PanacheQuery<Contact> queryContact = find("select * from contacts c " +
+                "where c."+ filters.get(0).getProperty() + " " + filters.get(0).getFilterOperator() + " " +
+                filters.get(0).getValue() + " and c." + filters.get(1).getProperty() + " " + filters.get(1).getFilterOperator() +
+                " " + filters.get(1).getValue() + " order by " + sorts.get(0).getProperty() + " " + sorts.get(0).getSortDirection() +
+                "," + sorts.get(1).getProperty() + " "+ sorts.get(1).getSortDirection()).page(page);
+        return queryContact.list();
 
     }
 
-    public Boolean deleteContact(UUID id)
-    {
-        Session session = sessionFactory.openSession();
-       // session.beginTransaction();
-        Contact contact = new Contact();
-        contact.setId(id);
-        session.delete(contact);
-        session.getTransaction().commit();
-        return true;
-    }
 
-    public Contact getContact(UUID id)
-    {
-        Session session = sessionFactory.openSession();
-        return session.get(Contact.class,id);
-
-    }
-
-    public Contact editContact(UUID id, Contact contactToSave)
-    {
-        Session session = sessionFactory.openSession();
-        Contact contact = session.load(Contact.class,id);
-      //  session.beginTransaction();
-        contact.setVacancyId(contactToSave.getVacancyId());
-        contact.setUserId(contactToSave.getUserId());
-        contact.setCompany(contactToSave.getCompany());
-        contact.setNotes(contactToSave.getNotes());
-        contact.setFirstName(contactToSave.getFirstName());
-        contact.setLastName(contactToSave.getLastName());
-        contact.setModifiedAt(ZonedDateTime.now());
-        contact.setCity(contactToSave.getCity());
-        contact.setPosition(contactToSave.getPosition());
-        contact.setMail(contactToSave.getMail());
-        contact.setTelegram(contactToSave.getTelegram());
-        contact.setVk(contactToSave.getVk());
-        contact.setSkype(contactToSave.getSkype());
-        contact.setTelephone(contactToSave.getTelephone());
-        session.saveOrUpdate(contact);
-        session.getTransaction().commit();
-        return contact;
-
-    }
 }

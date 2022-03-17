@@ -3,6 +3,8 @@ package com.vega.entities;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -16,9 +18,11 @@ public class Status {
     private StatusKey key;
 
     @Column(name="created_at")
+    @CreationTimestamp
     private ZonedDateTime createdAt;
 
     @Column(name="modified_at")
+    @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
     public ZonedDateTime getCreatedAt(){
