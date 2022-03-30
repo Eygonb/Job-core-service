@@ -4,17 +4,26 @@ public class Sorter {
 
     private String property;
 
-    Direction sortDirection;
-
-    enum Direction{ASC,DESC};
-
-    public Direction getSortDirection() {
+    public String getSortDirection() {
         return sortDirection;
     }
 
-    public void setSortDirection(Direction sortDirection) {
+    public void setSortDirection(String sortDirection) {
         this.sortDirection = sortDirection;
     }
+
+    //private Direction sortDirection;
+    private String sortDirection;
+
+    enum Direction{ASC,DESC};
+
+   // public Direction getSortDirection() {
+    //    return sortDirection;
+   // }
+
+   /* public void setSortDirection(Direction sortDirection) {
+        this.sortDirection = sortDirection;
+    }*/
 
 
     public String getProperty() {

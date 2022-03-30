@@ -26,11 +26,25 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
        /* Contact contact = new Contact();
         contact.setUserId(SecurityIdentity.USER_ATTRIBUTE);
         Predicate<Vacancy> predicateOne = vc -> vc.getUserId().equals(contact.getUserId());*/
+        String allFilters ="";
+        String allSorts ="";
+        for(int i=0;i<filters.size();i++)
+        {
+            allFilters+= " c."+filters.get(i).getProperty() + " " + filters.get(i).getFilterOperator() +
+                    " '" + filters.get(i).getValue()+"'";
+            if(i+1 <filters.size())
+                allFilters+=" and";
+            else
+                allFilters+=" ";
+        }
+        for (int j=0;j<sorts.size();j++)
+        {
+            allSorts+=" c."+sorts.get(j).getProperty() + " " + sorts.get(0).getSortDirection();
+            if(j+1<sorts.size())
+                allSorts+=",";
+        }
         PanacheQuery<Contact> queryContact = find("select * from contacts c " +
-                "where c."+ filters.get(0).getProperty() + " " + filters.get(0).getFilterOperator() + " " +
-                filters.get(0).getValue() + " and c." + filters.get(1).getProperty() + " " + filters.get(1).getFilterOperator() +
-                " " + filters.get(1).getValue() + " order by " + sorts.get(0).getProperty() + " " + sorts.get(0).getSortDirection() +
-                "," + sorts.get(1).getProperty() + " "+ sorts.get(1).getSortDirection()).page(page);
+                "where"+ allFilters + "order by" + allSorts).page(page);
         return queryContact.list();
 
     }
