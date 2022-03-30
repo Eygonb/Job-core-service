@@ -1,7 +1,6 @@
 package com.vega.service;
 
 import com.vega.entities.Status;
-import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.StatusRepository;

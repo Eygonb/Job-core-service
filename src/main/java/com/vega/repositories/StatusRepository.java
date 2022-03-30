@@ -1,5 +1,6 @@
 package com.vega.repositories;
 
+import com.vega.entities.Contact;
 import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
@@ -22,11 +23,25 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
 
     public List<Status> findAll(List<Sorter> sorts, List<Filter> filters, Page page)
     {
+        String allFilters ="";
+        String allSorts ="";
+        for(int i=0;i<filters.size();i++)
+        {
+            allFilters+= " s."+filters.get(i).getProperty() + " " + filters.get(i).getFilterOperator() +
+                    " '" + filters.get(i).getValue()+"'";
+            if(i+1 <filters.size())
+                allFilters+=" and";
+            else
+                allFilters+=" ";
+        }
+        for (int j=0;j<sorts.size();j++)
+        {
+            allSorts+=" s."+sorts.get(j).getProperty() + " " + sorts.get(0).getSortDirection();
+            if(j+1<sorts.size())
+                allSorts+=",";
+        }
         PanacheQuery<Status> queryStatus = find("select * from statuses s " +
-                "where s."+ filters.get(0).getProperty() + " " + filters.get(0).getFilterOperator() + " " +
-                filters.get(0).getValue() + " and s." + filters.get(1).getProperty() + " " + filters.get(1).getFilterOperator() +
-                " " + filters.get(1).getValue() + " order by " + sorts.get(0).getProperty() + " " + sorts.get(0).getSortDirection() +
-                "," + sorts.get(1).getProperty() + " "+ sorts.get(1).getSortDirection()).page(page);
+                "where"+ allFilters + "order by" + allSorts).page(page);
         return queryStatus.list();
 
     }

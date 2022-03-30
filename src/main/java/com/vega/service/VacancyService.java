@@ -20,11 +20,11 @@ public class VacancyService {
 
     public List<Vacancy> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize) {
         Page page = Page.of(pageIndex, pageSize);
-        List<Vacancy> vacancies = repository.findAll(sorts,filters ,page);
-        Vacancy vacancy = new Vacancy();
-        vacancy.setUserId(SecurityIdentity.USER_ATTRIBUTE);
-        Predicate<Vacancy> predicateOne = vc -> vc.getUserId().equals(vacancy.getUserId());
-        return (List<Vacancy>) vacancies.stream().filter(predicateOne);
+        return repository.findAll(sorts,filters ,page);
+       // Vacancy vacancy = new Vacancy();
+       // vacancy.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+       // Predicate<Vacancy> predicateOne = vc -> vc.getUserId().equals(vacancy.getUserId());
+      //  return (List<Vacancy>) vacancies.stream().filter(predicateOne);
     }
 
     public Vacancy get(UUID id) {
