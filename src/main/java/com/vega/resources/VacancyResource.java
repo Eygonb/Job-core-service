@@ -1,5 +1,8 @@
 package com.vega.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
@@ -10,6 +13,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,14 +23,19 @@ public class VacancyResource {
     @Inject
     VacancyService service;
 
+    @Inject
+    ObjectMapper objectMapper;
+
     @GET
     @Path("/all")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("sort") List<Sorter> sorts, @QueryParam("filter") List<Filter> filters,
+    public Response getAll(@QueryParam("sort") String sortParam, @QueryParam("filter") String filterParam,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
-                           @QueryParam("size") @DefaultValue("20") int pageSize){
-        return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
+                           @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
+//        List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<List<Sorter>>() {});
+        List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
+        return Response.ok(service.getAll(Collections.emptyList(), Collections.emptyList(),pageIndex,pageSize)).build();
     }
 
     @GET
@@ -39,11 +48,14 @@ public class VacancyResource {
 
     @Transactional
     @DELETE
-    public void delete(UUID id) {
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void delete(@PathParam("id") UUID id) {
        service.delete(id);
     }
 
     @POST
+    @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
