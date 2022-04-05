@@ -17,7 +17,7 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
 
     public List<Vacancy> findAll(List<Sorter> sorts, List<Filter> filters, Page page) {
        // String userId = "6789tr236h8tv6fgh";
-        String allFilters = "where v.user_id ='6789tr236h8tv6fgh'";
+        String allFilters = "where v.userId ='6789tr236h8tv6fgh'";
         String allSorts = "";
         Object[] values = new Object[filters.size()];
 
@@ -39,12 +39,12 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         }
 
         if (filters.size() > 0) {
-            PanacheQuery<Vacancy> queryVacancy = find("select * from vacancies v " +
-                    "where" + allFilters + "order by" + allSorts, values).page(page);
+            PanacheQuery<Vacancy> queryVacancy = find("from Vacancies v " +
+                    allFilters + "order by" + allSorts, values).page(page);
             return queryVacancy.list();
         } else
-            return find("select * from vacancies v " +
-                    "where" + allFilters + "order by" + allSorts).list();
+            return find("from Vacancy v " +
+                    allFilters + "order by" + allSorts).page(page).list();
     }
 
 

@@ -1,11 +1,12 @@
 package com.vega.processing;
 
+import com.vega.enums.Operator;
+
 public class Filter {
 
     private String property;
     private String value;
     private Operator filterOperator;
-    enum Operator{like,equals,notEquals,lessOrEquals,greaterOrEquals,less,greater};
 
     public Operator getFilterOperator() {
         return filterOperator;
@@ -31,6 +32,8 @@ public class Filter {
     public void setProperty(String property) {
         this.property = property;
     }
+
+
 
 
 }
