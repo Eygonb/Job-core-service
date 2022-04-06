@@ -1,22 +1,15 @@
 package com.vega.repositories;
 
-import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import com.vega.entities.Contact;
 import io.quarkus.panache.common.Page;
-import io.quarkus.security.identity.SecurityIdentity;
-
-
 import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.PersistenceException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 
 @ApplicationScoped

@@ -10,6 +10,7 @@ import io.quarkus.panache.common.Page;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -52,9 +53,7 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
     }
 
     public Vacancy editVacancy(UUID id, Vacancy vacancyToSave) {
-        Session session = sessionFactory.openSession();
-        Vacancy vacancy = session.load(Vacancy.class, id);
-        //session.beginTransaction();
+        Vacancy vacancy = findById(id);
         vacancy.setNameVacancy(vacancyToSave.getNameVacancy());
         vacancy.setCompany(vacancyToSave.getCompany());
         vacancy.setLocationLatitude(vacancyToSave.getLocationLatitude());
@@ -63,8 +62,6 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         vacancy.setSalary(vacancyToSave.getSalary());
         vacancy.setStatusName(vacancyToSave.getStatusName());
         vacancy.setModifiedAt(ZonedDateTime.now());
-        session.saveOrUpdate(vacancy);
-        session.getTransaction().commit();
         return vacancy;
     }
 }

@@ -7,7 +7,6 @@ import com.vega.processing.Sorter;
 import com.vega.repositories.ContactRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.security.identity.SecurityIdentity;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;

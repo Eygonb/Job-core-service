@@ -46,12 +46,9 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
     }
 
     public Status editStatus(Status.StatusKey key, Status statusToSave) {
-        Session session = sessionFactory.openSession();
-        Status status = session.load(Status.class, key);
+        Status status = findById(key);
         status.setModifiedAt(ZonedDateTime.now());
         status.setKey(statusToSave.getKey());
-        session.saveOrUpdate(status);
-        session.getTransaction().commit();
         return status;
     }
 }

@@ -9,6 +9,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,8 +45,7 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
     }
 
     public Event editEvent(UUID id, Event eventToSave) {
-        Session session = sessionFactory.openSession();
-        Event event = session.load(Event.class, id);
+        Event event = findById(id);
         event.setVacancyId(eventToSave.getVacancyId());
         event.setModifiedAt(ZonedDateTime.now());
         event.setName(eventToSave.getName());
@@ -53,8 +53,6 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
         event.setBeginDate(eventToSave.getBeginDate());
         event.setEndDate(eventToSave.getEndDate());
         event.setIsCompleted(eventToSave.getIsCompleted());
-        session.saveOrUpdate(event);
-        session.getTransaction().commit();
         return event;
     }
 

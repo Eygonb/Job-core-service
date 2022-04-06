@@ -1,27 +1,18 @@
 package com.vega.resources;
 
 
-import com.vega.entities.Contact;
 import com.vega.entities.Status;
-import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
-import com.vega.repositories.StatusRepository;
 import com.vega.service.StatusService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import io.quarkus.panache.common.Page;
-import io.quarkus.panache.common.Sort;
 import io.quarkus.security.identity.SecurityIdentity;
-
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.UUID;
-import java.util.function.Predicate;
 
 @Path("/statuses")
 @Produces(MediaType.APPLICATION_JSON)
@@ -64,7 +55,7 @@ public class StatusResource {
 
     @Transactional
     @DELETE
-    public void deleteStatusByKey(String name) {
+    public Response deleteStatusByKey(String name) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             key.setNameStatus(name);
@@ -89,12 +80,12 @@ public class StatusResource {
     @PUT
     @Path("{id}")
     @Transactional
-    public Response edit(String name, Status status){
+    public Response edit(String name, Status statusToSave){
         if (checkJwt()) {
             key.setNameStatus(name);
             key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
             String userId = jwt.getClaim("sub");
-            if (service.get(id) == null) {
+            if (service.get(key) == null) {
                 return Response.status(204).build();
             }
             Status status = service.update(key, statusToSave);

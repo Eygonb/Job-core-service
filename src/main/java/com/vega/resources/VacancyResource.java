@@ -5,9 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
-import com.vega.processing.Sorter;
 import com.vega.service.VacancyService;
-
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
