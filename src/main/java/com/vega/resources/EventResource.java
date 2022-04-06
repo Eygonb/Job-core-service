@@ -7,6 +7,7 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.EventRepository;
 import com.vega.service.EventService;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.security.identity.SecurityIdentity;
