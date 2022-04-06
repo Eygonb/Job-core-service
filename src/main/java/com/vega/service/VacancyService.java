@@ -5,13 +5,10 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.VacancyRepository;
 import io.quarkus.panache.common.Page;
-import io.quarkus.security.identity.SecurityIdentity;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @ApplicationScoped
 public class VacancyService {
