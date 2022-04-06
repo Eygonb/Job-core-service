@@ -33,9 +33,9 @@ public class VacancyResource {
     public Response getAll(@QueryParam("sort") String sortParam, @QueryParam("filter") String filterParam,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
-//        List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<List<Sorter>>() {});
+        List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<>() {});
         List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
-        return Response.ok(service.getAll(Collections.emptyList(), Collections.emptyList(),pageIndex,pageSize)).build();
+        return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
     }
 
     @GET

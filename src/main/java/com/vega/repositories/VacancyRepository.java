@@ -1,6 +1,7 @@
 package com.vega.repositories;
 
 import com.vega.entities.Vacancy;
+import com.vega.enums.Operator;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -22,12 +23,27 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         Object[] values = new Object[filters.size()];
 
         for (int i = 0; i < filters.size(); i++) {
-            allFilters += " v." + filters.get(i).getProperty() + " " + filters.get(i).getFilterOperator() + "?" + i;
+            String operator = "";
+            if(filters.get(i).getFilterOperator()== Operator.EQUALS)
+            {
+                operator ="=";
+            }
+            if(filters.get(i).getFilterOperator()== Operator.LESS)
+            {
+                operator ="<";
+            }
+            if(filters.get(i).getFilterOperator()== Operator.GREATER)
+            {
+                operator =">";
+            }
+            else
+                operator = "LIKE";
+            allFilters += " and v." + filters.get(i).getProperty() + " " + operator + " ?" + (i+1);
             values[i] = filters.get(i).getValue();
-            if (i + 1 < filters.size())
+           /* if (i + 1 < filters.size())
                 allFilters += " and";
             else
-                allFilters += " ";
+                allFilters += " ";*/
         }
         for (int j = 0; j < sorts.size(); j++) {
             allSorts += " v." + sorts.get(j).getProperty() + " " + sorts.get(j).getSortDirection();
@@ -39,9 +55,10 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         }
 
         if (filters.size() > 0) {
-            PanacheQuery<Vacancy> queryVacancy = find("from Vacancies v " +
-                    allFilters + "order by" + allSorts, values).page(page);
-            return queryVacancy.list();
+          //  PanacheQuery<Vacancy> queryVacancy = find("from Vacancy v " +
+                   // allFilters + "order by" + allSorts, values).page(page);
+            return find("from Vacancy v " +
+                    allFilters + " order by" + allSorts, values).page(page).list();
         } else
             return find("from Vacancy v " +
                     allFilters + "order by" + allSorts).page(page).list();
