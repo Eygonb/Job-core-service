@@ -53,6 +53,5 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
         session.saveOrUpdate(status);
         session.getTransaction().commit();
         return status;
-
     }
 }
