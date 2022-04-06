@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
-public class EventRepository implements PanacheRepositoryBase<Event,UUID> {
+public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
 
     public List<Event> findAll(List<Sorter> sorts, List<Filter> filters, Page page)
     {
@@ -56,5 +56,9 @@ public class EventRepository implements PanacheRepositoryBase<Event,UUID> {
         session.saveOrUpdate(event);
         session.getTransaction().commit();
         return event;
+    }
+
+    public List<Event> findByUserId(String userId) {
+        return list("user_id", userId);
     }
 }
