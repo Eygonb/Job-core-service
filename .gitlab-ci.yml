@@ -1,0 +1,29 @@
+image: docker:latest
+services:
+  - docker:dind
+
+stages:
+  - compile
+  - docker_build
+  - docker_push
+
+compile:
+  image: maven:3-jdk-11
+  stage: compile
+  before_script:
+    - chmod +x ./mvnw
+  script:
+    - ./mvnw package
+  artifacts:
+    paths:
+      - target/quarkus-app/lib/
+      - target/quarkus-app/*.jar
+      - target/quarkus-app/app/
+      - target/quarkus-app/quarkus/
+
+docker_build:
+  stage: docker_build
+  script:
+    - docker build -t $CI_REGISTRY/vegaproject/job-core-service/image ./
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $CI_REGISTRY/vegaproject/job-core-service/image
