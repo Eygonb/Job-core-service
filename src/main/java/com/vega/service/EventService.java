@@ -68,4 +68,8 @@ public class EventService {
     public List<Event> getByUserId(String userId) {
         return repository.findByUserId(userId);
     }
+
+    public List<Event> getByUserId(String userId) {
+        return repository.findByUserId(userId);
+    }
 }
