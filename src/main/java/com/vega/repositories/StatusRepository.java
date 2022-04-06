@@ -23,7 +23,7 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
 
     public List<Status> findAll(List<Sorter> sorts, List<Filter> filters, Page page)
     {
-        String allFilters ="";
+       /* String allFilters ="";
         String allSorts ="";
         for(int i=0;i<filters.size();i++)
         {
@@ -42,7 +42,8 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
         }
         PanacheQuery<Status> queryStatus = find("select * from statuses s " +
                 "where"+ allFilters + "order by" + allSorts).page(page);
-        return queryStatus.list();
+        return queryStatus.list();*/
+        return  null;
 
     }
 

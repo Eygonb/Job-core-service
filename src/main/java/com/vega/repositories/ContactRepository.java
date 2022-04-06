@@ -26,7 +26,7 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
        /* Contact contact = new Contact();
         contact.setUserId(SecurityIdentity.USER_ATTRIBUTE);
         Predicate<Vacancy> predicateOne = vc -> vc.getUserId().equals(contact.getUserId());*/
-        String allFilters ="";
+       /* String allFilters ="";
         String allSorts ="";
         for(int i=0;i<filters.size();i++)
         {
@@ -45,7 +45,8 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
         }
         PanacheQuery<Contact> queryContact = find("select * from contacts c " +
                 "where"+ allFilters + "order by" + allSorts).page(page);
-        return queryContact.list();
+        return queryContact.list();*/
+        return null;
 
     }
 

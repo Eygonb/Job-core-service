@@ -5,7 +5,7 @@ import com.vega.enums.Operator;
 public class Filter {
 
     private String property;
-    private String value;
+    private Object value;
     private Operator filterOperator;
 
     public Operator getFilterOperator() {
@@ -17,11 +17,11 @@ public class Filter {
     }
 
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

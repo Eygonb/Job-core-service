@@ -17,7 +17,7 @@ public class EventRepository implements PanacheRepositoryBase<Event,UUID> {
 
     public List<Event> findAll(List<Sorter> sorts, List<Filter> filters, Page page)
     {
-        String allFilters ="";
+       /* String allFilters ="";
         String allSorts ="";
         for(int i=0;i<filters.size();i++)
         {
@@ -36,7 +36,8 @@ public class EventRepository implements PanacheRepositoryBase<Event,UUID> {
         }
         PanacheQuery<Event> queryEvent = find("select * from events ev " +
                 "where"+ allFilters + "order by" + allSorts).page(page);
-        return queryEvent.list();
+        return queryEvent.list();*/
+        return  null;
 
     }
 }
