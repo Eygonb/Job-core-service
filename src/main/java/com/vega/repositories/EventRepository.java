@@ -1,20 +1,23 @@
 package com.vega.repositories;
 
-
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import com.vega.entities.Event;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
-
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
 public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
+    @Inject
+    EntityManager entityManager;
 
     public List<Event> findAll(List<Sorter> sorts, List<Filter> filters, Page page)
     {
@@ -58,5 +61,15 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
 
     public List<Event> findByUserId(String userId) {
         return list("user_id", userId);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Event> findEventsWithCurrentNotification() {
+        return entityManager.createNativeQuery(
+                        "SELECT e.* " +
+                                "FROM events e " +
+                                "WHERE (begin_date - CAST(notify_for || ' minutes' AS INTERVAL)) = ?", Event.class)
+                .setParameter(1, ZonedDateTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .getResultList();
     }
 }
