@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -17,8 +18,7 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
     // Может быть удален из-за существования метода persist, определенного в PanacheRepositoryBase
     // (created_at и modified_at автоматически выставляются hibernate'ом из-за аннотаций перед этими полями
     // в классах сущностей, id также автоматически генерируется)
-    public Event addEvent(Event eventToSave)
-    {
+    public Event addEvent(Event eventToSave) {
         Event event = new Event();
         Session session = sessionFactory.openSession();
         event.setVacancyId(eventToSave.getVacancyId());
@@ -34,7 +34,6 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
         session.saveOrUpdate(event);
         session.getTransaction().commit();
         return event;
-
     }
 
 
@@ -52,7 +51,6 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
     public Event getEvent(UUID id) {
         Session session = sessionFactory.openSession();
         return session.get(Event.class, id);
-
     }
 
     public Event findByIdAndUserId(UUID id, String userId) {
@@ -72,6 +70,9 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
         session.saveOrUpdate(event);
         session.getTransaction().commit();
         return event;
+    }
 
+    public List<Event> findByUserId(String userId) {
+        return list("user_id", userId);
     }
 }

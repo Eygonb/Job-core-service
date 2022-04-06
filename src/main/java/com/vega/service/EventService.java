@@ -47,4 +47,8 @@ public class EventService {
     public Event update(UUID id, Event event) {
         return repository.editEvent(id, event);
     }
+
+    public List<Event> getByUserId(String userId) {
+        return repository.findByUserId(userId);
+    }
 }
