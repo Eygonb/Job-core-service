@@ -25,7 +25,6 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
         session.saveOrUpdate(status);
         session.getTransaction().commit();
         return status;
-
     }
 
     // Может быть удален из-за существования метода deleteById, определенного в PanacheRepositoryBase
@@ -42,7 +41,6 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
     public Status getStatus(Status.StatusKey key) {
         Session session = sessionFactory.openSession();
         return session.get(Status.class, key);
-
     }
 
     public Status editStatus(Status.StatusKey key, Status statusToSave) {
@@ -53,8 +51,5 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
         session.saveOrUpdate(status);
         session.getTransaction().commit();
         return status;
-
     }
-
-
 }

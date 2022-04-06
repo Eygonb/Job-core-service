@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 
+@Path("/contacts")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ContactResource {
@@ -62,7 +63,6 @@ public class ContactResource {
     @Transactional
     public Response createContact(Contact contactToSave) {
         if (checkJwt()) {
-            String userId = jwt.getClaim("sub");
             Contact contact = service.add(contactToSave);
             return Response.ok(contact).build();
         }
@@ -75,7 +75,7 @@ public class ContactResource {
     public Response edit(UUID id, Contact contactToSave) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
-            if (service.get(id) == null) {
+            if (service.getByIdAndUserId(id, userId) == null) {
                 return Response.status(204).build();
             }
             Contact contact = service.update(id, contactToSave);

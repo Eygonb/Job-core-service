@@ -35,7 +35,6 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         session.saveOrUpdate(vacancy);
         session.getTransaction().commit();
         return vacancy;
-
     }
 
     // Может быть удален из-за существования метода deleteById, определенного в PanacheRepositoryBase
@@ -75,8 +74,5 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         session.saveOrUpdate(vacancy);
         session.getTransaction().commit();
         return vacancy;
-
     }
-
-
 }

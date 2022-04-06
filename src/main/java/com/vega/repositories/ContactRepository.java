@@ -39,7 +39,6 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
         session.saveOrUpdate(contact);
         session.getTransaction().commit();
         return contact;
-
     }
 
     // Может быть удален из-за существования метода deleteById, определенного в PanacheRepositoryBase
@@ -65,7 +64,6 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
 
     public Contact editContact(UUID id, Contact contactToSave) {
         Contact contact = findById(id);
-
         contact.setVacancyId(contactToSave.getVacancyId());
         contact.setUserId(contactToSave.getUserId());
         contact.setCompany(contactToSave.getCompany());
@@ -80,8 +78,6 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
         contact.setVk(contactToSave.getVk());
         contact.setSkype(contactToSave.getSkype());
         contact.setTelephone(contactToSave.getTelephone());
-
         return contact;
-
     }
 }
