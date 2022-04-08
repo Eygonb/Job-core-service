@@ -48,6 +48,7 @@ public class VacancyService {
     }
 
     public Vacancy add(Vacancy vacancyToSave) {
+        vacancyToSave.setUserId(SecurityIdentity.USER_ATTRIBUTE);
         repository.persist(vacancyToSave);
         return repository.findById(vacancyToSave.getId());
     }
@@ -70,5 +71,10 @@ public class VacancyService {
     public int count(List<Sorter> sorts, List<Filter> filters)
     {
         return repository.countVacancy(sorts,filters);
+    }
+
+    public int count(List<Sorter> sorts, List<Filter> filters)
+    {
+        return repository.countVacanncy(sorts,filters);
     }
 }
