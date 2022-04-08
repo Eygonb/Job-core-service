@@ -17,7 +17,12 @@ import java.util.UUID;
 public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
 
     public List<Vacancy> findAll(List<Sorter> sorts, List<Filter> filters, Page page) {
-       // String userId = "6789tr236h8tv6fgh";
+       return queryVacancy(sorts, filters).page(page).list();
+    }
+
+    private PanacheQuery<Vacancy> queryVacancy(List<Sorter> sorts, List<Filter> filters)
+    {
+        // String userId = "6789tr236h8tv6fgh";
         String allFilters = "where v.userId ='6789tr236h8tv6fgh'";
         String allSorts = "";
         Object[] values = new Object[filters.size()];
@@ -28,11 +33,11 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
             {
                 operator ="=";
             }
-            if(filters.get(i).getFilterOperator()== Operator.LESS)
+            else if(filters.get(i).getFilterOperator()== Operator.LESS)
             {
                 operator ="<";
             }
-            if(filters.get(i).getFilterOperator()== Operator.GREATER)
+            else if(filters.get(i).getFilterOperator()== Operator.GREATER)
             {
                 operator =">";
             }
@@ -40,10 +45,6 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
                 operator = "LIKE";
             allFilters += " and v." + filters.get(i).getProperty() + " " + operator + " ?" + (i+1);
             values[i] = filters.get(i).getValue();
-           /* if (i + 1 < filters.size())
-                allFilters += " and";
-            else
-                allFilters += " ";*/
         }
         for (int j = 0; j < sorts.size(); j++) {
             allSorts += " v." + sorts.get(j).getProperty() + " " + sorts.get(j).getSortDirection();
@@ -55,13 +56,18 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         }
 
         if (filters.size() > 0) {
-          //  PanacheQuery<Vacancy> queryVacancy = find("from Vacancy v " +
-                   // allFilters + "order by" + allSorts, values).page(page);
+            //  PanacheQuery<Vacancy> queryVacancy = find("from Vacancy v " +
+            // allFilters + "order by" + allSorts, values).page(page);
             return find("from Vacancy v " +
-                    allFilters + " order by" + allSorts, values).page(page).list();
+                    allFilters + " order by" + allSorts, values);
         } else
             return find("from Vacancy v " +
-                    allFilters + "order by" + allSorts).page(page).list();
+                    allFilters + "order by" + allSorts);
+    }
+
+    public int countVacanncy(List<Sorter> sorts, List<Filter> filters)
+    {
+        return queryVacancy(sorts, filters).list().size();
     }
 
 
