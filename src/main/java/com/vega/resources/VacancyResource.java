@@ -7,6 +7,7 @@ import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.service.VacancyService;
+import io.quarkus.vertx.web.Header;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -35,7 +36,9 @@ public class VacancyResource {
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
         List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<>() {});
         List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
-        return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
+        int countVacancy = service.count(sorts, filters);
+        return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).
+                header("CountVacancy", countVacancy).build();
     }
 
     @GET
