@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-@Path("/vcs")
+@Path("/vacancies")
 public class VacancyResource {
 
     @Inject
@@ -28,7 +28,6 @@ public class VacancyResource {
     ObjectMapper objectMapper;
 
     @GET
-    @Path("/all")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(@QueryParam("sort") String sortParam, @QueryParam("filter") String filterParam,
@@ -38,7 +37,7 @@ public class VacancyResource {
         List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
         int countVacancy = service.count(sorts, filters);
         return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).
-                header("CountVacancy", countVacancy).build();
+                header("X-Total-Count", countVacancy).build();
     }
 
     @GET
@@ -58,7 +57,6 @@ public class VacancyResource {
     }
 
     @POST
-    @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
