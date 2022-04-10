@@ -17,11 +17,10 @@ import java.util.UUID;
 public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
 
     public List<Vacancy> findAll(List<Sorter> sorts, List<Filter> filters, Page page) {
-       return queryVacancy(sorts, filters).page(page).list();
+        return queryVacancy(sorts, filters).page(page).list();
     }
 
-    private PanacheQuery<Vacancy> queryVacancy(List<Sorter> sorts, List<Filter> filters)
-    {
+    private PanacheQuery<Vacancy> queryVacancy(List<Sorter> sorts, List<Filter> filters) {
         // String userId = "6789tr236h8tv6fgh";
         String allFilters = "where v.userId ='6789tr236h8tv6fgh'";
         String allSorts = "";
@@ -29,21 +28,15 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
 
         for (int i = 0; i < filters.size(); i++) {
             String operator = "";
-            if(filters.get(i).getFilterOperator()== Operator.EQUALS)
-            {
-                operator ="=";
-            }
-            else if(filters.get(i).getFilterOperator()== Operator.LESS)
-            {
-                operator ="<";
-            }
-            else if(filters.get(i).getFilterOperator()== Operator.GREATER)
-            {
-                operator =">";
-            }
-            else
+            if (filters.get(i).getFilterOperator() == Operator.EQUALS) {
+                operator = "=";
+            } else if (filters.get(i).getFilterOperator() == Operator.LESS) {
+                operator = "<";
+            } else if (filters.get(i).getFilterOperator() == Operator.GREATER) {
+                operator = ">";
+            } else
                 operator = "LIKE";
-            allFilters += " and v." + filters.get(i).getProperty() + " " + operator + " ?" + (i+1);
+            allFilters += " and v." + filters.get(i).getProperty() + " " + operator + " ?" + (i + 1);
             values[i] = filters.get(i).getValue();
         }
         for (int j = 0; j < sorts.size(); j++) {
@@ -65,8 +58,7 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
                     allFilters + "order by" + allSorts);
     }
 
-    public int countVacanncy(List<Sorter> sorts, List<Filter> filters)
-    {
+    public int countVacanncy(List<Sorter> sorts, List<Filter> filters) {
         return queryVacancy(sorts, filters).list().size();
     }
 

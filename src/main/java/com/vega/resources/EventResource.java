@@ -21,19 +21,20 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@Path("/events")
 public class EventResource {
 
 
     @Inject
     EventService service;
 
-    @GET()
+   /* @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(@QueryParam("sort") List<Sorter> sorts, List<Filter> filters,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize){
         return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
-    }
+    }*/
 
     @GET
     @Path("{id}")
@@ -44,7 +45,8 @@ public class EventResource {
 
     @Transactional
     @DELETE
-    public void delete(UUID id) {
+    @Path("{id}")
+    public void delete(@PathParam("id")UUID id) {
         service.delete(id);
     }
 

@@ -37,6 +37,7 @@ public class EventService {
     }
 
     public Event add(Event eventToSave) {
+        eventToSave.setUserId(SecurityIdentity.USER_ATTRIBUTE);
         repository.persist(eventToSave);
         return repository.findById(eventToSave.getId());
     }

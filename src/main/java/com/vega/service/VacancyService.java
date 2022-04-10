@@ -50,6 +50,8 @@ public class VacancyService {
         upVacancy.setCompany(vacancy.getCompany());
         upVacancy.setSalary(vacancy.getSalary());
         upVacancy.setNotes(vacancy.getNotes());
+        upVacancy.setContacts(vacancy.getContacts());
+        upVacancy.setEvents(vacancy.getEvents());
         //repository.persist(upVacancy);
         return  upVacancy;
     }

@@ -39,6 +39,7 @@ public class ContactService {
 
 
     public Contact add(Contact contactToSave) {
+        contactToSave.setUserId(SecurityIdentity.USER_ATTRIBUTE);
         repository.persist(contactToSave);
         return repository.findById(contactToSave.getId());
     }

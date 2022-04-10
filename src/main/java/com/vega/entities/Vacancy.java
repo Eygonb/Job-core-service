@@ -63,6 +63,7 @@ public class Vacancy {
     @JoinColumn(name="vacancy_id")
     private List<Contact> contacts;
 
+
     public Vacancy(){}
 
     public UUID getId(){
@@ -151,5 +152,21 @@ public class Vacancy {
     
     public void setLocationLongitude(Float locationLongitude){
         this.locationLongitude = locationLongitude;
+    }
+
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
     }
 }

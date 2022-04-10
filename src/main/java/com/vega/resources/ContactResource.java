@@ -21,18 +21,19 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@Path("/contacts")
 public class ContactResource {
 
     @Inject
     ContactService service;
 
-    @GET()
+   /* @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(@QueryParam("sort") List<Sorter> sorts, List<Filter> filters,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize){
         return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
-    }
+    }*/
 
     @GET
     @Path("{id}")
@@ -43,7 +44,9 @@ public class ContactResource {
 
     @Transactional
     @DELETE
-    public void delete(UUID id) {
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void delete(@PathParam("id") UUID id) {
         service.delete(id);
     }
 
