@@ -63,4 +63,3 @@ CREATE TABLE contacts
     primary key(id),
     CONSTRAINT fk_vacancy FOREIGN KEY(vacancy_id)  REFERENCES vacancies(id)
 );
-
