@@ -31,7 +31,6 @@ public class VacancyResource {
     ObjectMapper objectMapper;
 
     @GET
-    @Path("/all")
     public Response getAll(@QueryParam("sort") String sortParam, @QueryParam("filter") String filterParam,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {

@@ -30,16 +30,16 @@ public class ContactResource {
     JsonWebToken jwt;
     @Inject
     ContactService service;
-
-    @GET()
-    public Response getAll(@QueryParam("sort") List<Sorter> sorts, List<Filter> filters,
+/*
+    @GET
+    public Response getAll(@QueryParam("sort") String sorts, String filters,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize){
         if (checkJwt()) {
             return Response.ok(service.getAll(sorts, filters, pageIndex, pageSize)).build();
         }
         return Response.status(401).build();
-    }
+    }*/
 
     @GET
     @Path("{id}")

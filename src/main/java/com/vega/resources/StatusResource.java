@@ -23,7 +23,7 @@ public class StatusResource {
     @Inject
     StatusService service;
     Status.StatusKey key;
-
+/*
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(@QueryParam("sort") List<Sorter> sorts, List<Filter> filters,
@@ -33,7 +33,7 @@ public class StatusResource {
             return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).build();
         }
         return Response.status(401).build();
-    }
+    }*/
 
     @GET
     @Path("{name}")
