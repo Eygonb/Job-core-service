@@ -67,16 +67,4 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
         return find("id = ?1 and user_id = ?2", id, userId).firstResult();
     }
 
-    public Vacancy editVacancy(UUID id, Vacancy vacancyToSave) {
-        Vacancy vacancy = findById(id);
-        vacancy.setNameVacancy(vacancyToSave.getNameVacancy());
-        vacancy.setCompany(vacancyToSave.getCompany());
-        vacancy.setLocationLatitude(vacancyToSave.getLocationLatitude());
-        vacancy.setLocationLongitude(vacancyToSave.getLocationLongitude());
-        vacancy.setNotes(vacancyToSave.getNotes());
-        vacancy.setSalary(vacancyToSave.getSalary());
-        vacancy.setStatusName(vacancyToSave.getStatusName());
-        vacancy.setModifiedAt(ZonedDateTime.now());
-        return vacancy;
-    }
 }
