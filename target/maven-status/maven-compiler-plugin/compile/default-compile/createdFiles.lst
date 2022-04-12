@@ -1,8 +1,12 @@
+com\vega\notifications\model\Notification.class
 com\vega\started\RestAPI.class
+com\vega\notifications\kafka\NotificationSerializer.class
 com\vega\entities\Status$StatusKey.class
 com\vega\processing\Filter.class
 com\vega\resources\VacancyResource$2.class
+com\vega\Main.class
 com\vega\enums\Direction.class
+com\vega\notifications\NotificationScheduler.class
 com\vega\repositories\StatusRepository.class
 com\vega\resources\VacancyResource.class
 com\vega\processing\Sorter.class
@@ -13,6 +17,7 @@ com\vega\entities\Contact.class
 com\vega\repositories\VacancyRepository.class
 com\vega\service\ContactService.class
 com\vega\resources\VacancyResource$1.class
+com\vega\notifications\NotificationSender.class
 com\vega\repositories\EventRepository.class
 com\vega\resources\EventResource.class
 com\vega\resources\ContactResource.class
@@ -23,3 +28,4 @@ com\vega\service\StatusService.class
 com\vega\service\VacancyService.class
 com\vega\entities\Event.class
 com\vega\resources\StatusResource.class
+com\vega\notifications\kafka\KafkaNotificationSender.class

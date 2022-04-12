@@ -54,8 +54,9 @@ public class StatusResource {
     }
 
     @Transactional
+    @Path("{name}")
     @DELETE
-    public Response deleteStatusByKey(String name) {
+    public Response deleteStatusByKey(@PathParam("name") String name) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             key.setNameStatus(name);
@@ -78,9 +79,9 @@ public class StatusResource {
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{name}")
     @Transactional
-    public Response edit(String name, Status statusToSave){
+    public Response edit(@PathParam("name") String name, Status statusToSave){
         if (checkJwt()) {
             key.setNameStatus(name);
             key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
@@ -98,3 +99,4 @@ public class StatusResource {
         return jwt.containsClaim("sub") && jwt.getClaim("sub") != null;
     }
 }
+

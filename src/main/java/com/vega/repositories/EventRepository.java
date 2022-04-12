@@ -49,7 +49,6 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
         return find("id = ?1 and user_id = ?2", id, userId).firstResult();
     }
 
-
     public List<Event> findByUserId(String userId) {
         return list("user_id", userId);
     }

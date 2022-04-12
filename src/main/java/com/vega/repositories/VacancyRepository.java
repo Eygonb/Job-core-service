@@ -10,7 +10,6 @@ import io.quarkus.panache.common.Page;
 
 
 import javax.enterprise.context.ApplicationScoped;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,12 +58,14 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
                     allFilters + "order by" + allSorts);
     }
 
-    public int countVacanncy(List<Sorter> sorts, List<Filter> filters) {
+    public int countVacancy(List<Sorter> sorts, List<Filter> filters) {
         return queryVacancy(sorts, filters).list().size();
     }
 
     public Vacancy findByIdAndUserId(UUID id, String userId) {
         return find("id = ?1 and user_id = ?2", id, userId).firstResult();
     }
+
+
 
 }

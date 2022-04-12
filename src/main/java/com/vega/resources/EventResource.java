@@ -10,6 +10,7 @@ import com.vega.service.EventService;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.security.identity.SecurityIdentity;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
@@ -57,7 +58,7 @@ public class EventResource {
     @Transactional
     @DELETE
     @Path("{id}")
-    public Response deleteEventById(UUID id) {
+    public Response deleteEventById(@PathParam("id") UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             if (!service.deleteWithUserId(id, userId)) {
@@ -80,7 +81,7 @@ public class EventResource {
     @PUT
     @Path("{id}")
     @Transactional
-    public Response edit(UUID id, Event eventToSave) {
+    public Response edit(@PathParam("id") UUID id, Event eventToSave) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             if (service.getByIdAndUserId(id, userId) == null) {
@@ -110,4 +111,3 @@ public class EventResource {
         return jwt.containsClaim("sub") && jwt.getClaim("sub") != null;
     }
 }
-

@@ -8,6 +8,7 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.service.VacancyService;
 import io.quarkus.vertx.web.Header;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -30,6 +31,7 @@ public class VacancyResource {
     ObjectMapper objectMapper;
 
     @GET
+    @Path("/all")
     public Response getAll(@QueryParam("sort") String sortParam, @QueryParam("filter") String filterParam,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
@@ -60,7 +62,7 @@ public class VacancyResource {
     @Transactional
     @DELETE
     @Path("{id}")
-    public Response deleteVacancyById(UUID id) {
+    public Response deleteVacancyById(@PathParam("id")  UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             if (!service.deleteWithUserId(id, userId)) {
@@ -83,7 +85,7 @@ public class VacancyResource {
     @PUT
     @Path("{id}")
     @Transactional
-    public Response edit(UUID id, Vacancy vacancyToSave) {
+    public Response edit(@PathParam("id")  UUID id, Vacancy vacancyToSave) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             if (service.getByIdAndUserId(id, userId) == null) {

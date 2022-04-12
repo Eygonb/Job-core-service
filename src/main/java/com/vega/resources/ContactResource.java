@@ -10,6 +10,7 @@ import com.vega.service.VacancyService;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.security.identity.SecurityIdentity;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
@@ -57,7 +58,7 @@ public class ContactResource {
     @Transactional
     @DELETE
     @Path("{id}")
-    public Response deleteContactById(UUID id) {
+    public Response deleteContactById(@PathParam("id") UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             if (!service.deleteWithUserId(id, userId)) {
@@ -80,7 +81,7 @@ public class ContactResource {
     @PUT
     @Path("{id}")
     @Transactional
-    public Response edit(UUID id, Contact contactToSave) {
+    public Response edit(@PathParam("id") UUID id, Contact contactToSave) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             if (service.getByIdAndUserId(id, userId) == null) {

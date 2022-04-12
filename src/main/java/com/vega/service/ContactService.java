@@ -52,7 +52,22 @@ public class ContactService {
         return repository.findById(contactToSave.getId());
     }
 
-    public Contact update(UUID id, Contact contact) {
-        return repository.editContact(id, contact);
+    public Contact update(UUID id, Contact contactToSave) {
+        Contact contact = repository.findById(id);
+        contact.setFirstName(contactToSave.getFirstName());
+        contact.setLastName(contactToSave.getLastName());
+        contact.setCity(contactToSave.getCity());
+        contact.setCompany(contactToSave.getCompany());
+        contact.setSkype(contactToSave.getSkype());
+        contact.setTelegram(contactToSave.getTelegram());
+        contact.setTelephone(contactToSave.getTelephone());
+        contact.setNotes(contactToSave.getNotes());
+        contact.setMail(contactToSave.getMail());
+        contact.setPosition(contactToSave.getPosition());
+        contact.setVk(contactToSave.getVk());
+        contact.setVacancyId(contactToSave.getVacancyId());
+        repository.persist(contact);
+        return  contact;
     }
+
 }

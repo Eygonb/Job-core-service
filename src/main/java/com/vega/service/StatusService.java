@@ -55,6 +55,9 @@ public class StatusService {
     }
 
     public Status update(Status.StatusKey id, Status status) {
-        return repository.editStatus(id, status);
+        Status upStatus = repository.findById(id);
+        upStatus.setKey(status.getKey());
+        return upStatus;
     }
+
 }

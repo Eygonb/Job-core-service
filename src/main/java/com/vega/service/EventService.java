@@ -51,9 +51,17 @@ public class EventService {
         return repository.findById(eventToSave.getId());
     }
 
-    public Event update(UUID id, Event event) {
-        return repository.editEvent(id, event);
+    public Event update(UUID id, Event eventToSave) {
+        Event event = repository.findById(id);
+        event.setName(eventToSave.getName());
+        event.setBeginDate(eventToSave.getBeginDate());
+        event.setEndDate(eventToSave.getEndDate());
+        event.setIsCompleted(eventToSave.getIsCompleted());
+        event.setVacancyId(eventToSave.getVacancyId());
+        repository.persist(event);
+        return  event;
     }
+
 
     public List<Event> getByUserId(String userId) {
         return repository.findByUserId(userId);
