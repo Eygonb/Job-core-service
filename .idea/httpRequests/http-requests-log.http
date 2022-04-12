@@ -1,0 +1,32 @@
+POST http://localhost/vcs/create
+
+###
+
+GET http://localhost:8080/hello
+
+###
+
+GET http://hello
+
+###
+
+GET http://localhost:8080/hello
+
+###
+
+GET http://localhost:8080/vac/all
+
+###
+
+GET http://localhost/vac/all
+
+###
+
+GET http://localhost:8080/vac/890tyu567fjh456vvhjv
+
+###
+
+GET http://vac/890tyu567fjh456vvhjv
+
+###
+
