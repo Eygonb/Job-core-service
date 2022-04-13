@@ -1,6 +1,6 @@
-package com.vacancinated.notifications.kafka;
+package com.vega.notifications.kafka;
 
-import com.vacancinated.notifications.model.Notification;
+import com.vega.notifications.model.Notification;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 

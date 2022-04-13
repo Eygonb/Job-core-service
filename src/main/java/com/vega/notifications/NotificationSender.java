@@ -1,9 +1,10 @@
-package com.vacancinated.notifications;
+package com.vega.notifications;
 
-import com.vacancinated.db.entity.Event;
-import com.vacancinated.db.repositories.EventRepository;
-import com.vacancinated.notifications.kafka.KafkaNotificationSender;
-import com.vacancinated.notifications.model.Notification;
+
+import com.vega.entities.Event;
+import com.vega.notifications.kafka.KafkaNotificationSender;
+import com.vega.notifications.model.Notification;
+import com.vega.repositories.EventRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

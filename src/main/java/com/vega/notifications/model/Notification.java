@@ -1,6 +1,7 @@
-package com.vacancinated.notifications.model;
+package com.vega.notifications.model;
 
-import com.vacancinated.db.entity.Event;
+
+import com.vega.entities.Event;
 
 import java.time.ZonedDateTime;
 

@@ -1,4 +1,4 @@
-package com.vacancinated.notifications;
+package com.vega.notifications;
 
 import io.quarkus.scheduler.Scheduled;
 

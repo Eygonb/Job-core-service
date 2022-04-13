@@ -1,8 +1,8 @@
-package com.vacancinated.notifications.kafka;
+package com.vega.notifications.kafka;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.vacancinated.notifications.model.Notification;
+import com.vega.notifications.model.Notification;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.io.UnsupportedEncodingException;

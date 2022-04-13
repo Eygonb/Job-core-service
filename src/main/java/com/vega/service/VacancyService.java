@@ -72,9 +72,4 @@ public class VacancyService {
     {
         return repository.countVacancy(sorts,filters);
     }
-
-    public int count(List<Sorter> sorts, List<Filter> filters)
-    {
-        return repository.countVacanncy(sorts,filters);
-    }
 }

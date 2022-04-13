@@ -1,4 +1,4 @@
-package com.vacancinated;
+package com.vega;
 
 import io.quarkus.runtime.annotations.QuarkusMain;
 import io.quarkus.runtime.Quarkus;
