@@ -1,13 +1,11 @@
 package com.vega.repositories;
 
-
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import com.vega.entities.Event;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -58,7 +56,7 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
         return entityManager.createNativeQuery(
                         "SELECT e.* " +
                                 "FROM events e " +
-                                "WHERE (begin_date - CAST(end_date || ' minutes' AS INTERVAL)) = ?", Event.class)
+                                "WHERE (begin_date - CAST(notify_for || ' minutes' AS INTERVAL)) = ?", Event.class)
                 .setParameter(1, ZonedDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .getResultList();
     }
