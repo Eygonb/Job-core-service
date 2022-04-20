@@ -7,7 +7,6 @@ import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.service.VacancyService;
-import io.quarkus.vertx.web.Header;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.inject.Inject;
@@ -15,7 +14,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,14 +29,18 @@ public class VacancyResource {
     ObjectMapper objectMapper;
 
     @GET
-    public Response getAll(@QueryParam("sort") String sortParam, @QueryParam("filter") String filterParam,
+    public Response getAll(@QueryParam("sort") @DefaultValue("[]") String sortParam,
+                           @QueryParam("filter") @DefaultValue("[]") String filterParam,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
         if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+          //  String userId = "quarkus.user";
             List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<>() {});
             List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
-            int countVacancy = service.count(sorts, filters);
-            return Response.ok(service.getAll(sorts, filters,pageIndex,pageSize)).
+            List<Vacancy> vacancyList = service.getAll(sorts, filters,pageIndex,pageSize,userId);
+            Long countVacancy = service.count(filters,userId);
+            return Response.ok(vacancyList).
                     header("X-Total-Count", countVacancy).build();
         }
         return Response.status(401).build();
@@ -75,7 +77,8 @@ public class VacancyResource {
     @Transactional
     public Response createVacancy(Vacancy vacancyToSave) {
         if (checkJwt()) {
-            Vacancy vacancy = service.add(vacancyToSave);
+            String userId = jwt.getClaim("sub");
+            Vacancy vacancy = service.add(vacancyToSave, userId);
             return Response.ok(vacancy).build();
         }
         return Response.status(401).build();

@@ -16,6 +16,7 @@ META-INF\panache-archive.marker
 com\vega\entities\Contact.class
 com\vega\repositories\VacancyRepository.class
 com\vega\service\ContactService.class
+com\vega\enums\CreationMapper.class
 com\vega\resources\VacancyResource$1.class
 com\vega\notifications\NotificationSender.class
 com\vega\repositories\EventRepository.class

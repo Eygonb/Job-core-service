@@ -44,6 +44,9 @@ public class Event {
     @Column(name="end_date")
     private ZonedDateTime endDate;
 
+    @Column(name="notify_for")
+    private Integer notifyFor;
+
     @Column
     private String notes;
 
@@ -128,5 +131,13 @@ public class Event {
     
     public void setIsCompleted(Boolean isCompleted){
         this.isCompleted = isCompleted;
+    }
+
+    public Integer getNotifyFor() {
+        return notifyFor;
+    }
+
+    public void setNotifyFor(Integer notifyFor) {
+        this.notifyFor = notifyFor;
     }
 }

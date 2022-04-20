@@ -16,6 +16,7 @@ import java.util.UUID;
 
 @ApplicationScoped
 public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
+
     public List<Contact> findAll(List<Sorter> sorts, List<Filter> filters, Page page) {
        /* Contact contact = new Contact();
         contact.setUserId(SecurityIdentity.USER_ATTRIBUTE);

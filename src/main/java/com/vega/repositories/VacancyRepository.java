@@ -1,71 +1,70 @@
 package com.vega.repositories;
 
 import com.vega.entities.Vacancy;
+import com.vega.enums.CreationMapper;
 import com.vega.enums.Operator;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
 
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @ApplicationScoped
 public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
 
-    public List<Vacancy> findAll(List<Sorter> sorts, List<Filter> filters, Page page) {
-        return queryVacancy(sorts, filters).page(page).list();
+    public List<Vacancy> findAll(List<Sorter> sorts, List<Filter> filters, Page page, String userId) {
+        Object[] values = new Object[filters.size()+1];
+        String allFilters = createFilter(filters, userId, values);
+        String allSorts = createSorter(sorts);
+        return find(allFilters + " order by" + allSorts, values).page(page).list();
     }
 
-    private PanacheQuery<Vacancy> queryVacancy(List<Sorter> sorts, List<Filter> filters) {
-        // String userId = "6789tr236h8tv6fgh";
-        String allFilters = "where v.userId ='6789tr236h8tv6fgh'";
-        String allSorts = "";
-        Object[] values = new Object[filters.size()];
-
+    private String createFilter(List<Filter> filters, String userId, Object[] values) {
+        StringBuilder allFilters = new StringBuilder("from Vacancy v where v.userId = ?1");
+        values[0] = userId;
+        CreationMapper mapper = new CreationMapper();
+        Map<Operator, String> map = mapper.getMap();
         for (int i = 0; i < filters.size(); i++) {
-            String operator = "";
-            if (filters.get(i).getFilterOperator() == Operator.EQUALS) {
-                operator = "=";
-            } else if (filters.get(i).getFilterOperator() == Operator.LESS) {
-                operator = "<";
-            } else if (filters.get(i).getFilterOperator() == Operator.GREATER) {
-                operator = ">";
-            } else
-                operator = "LIKE";
-            allFilters += " and v." + filters.get(i).getProperty() + " " + operator + " ?" + (i + 1);
-            values[i] = filters.get(i).getValue();
+            String operator;
+            operator = map.get(filters.get(i).getFilterOperator());
+            allFilters.append(" and v.").append(filters.get(i).getProperty()).append(" ").append(operator).append(" ?").append(i + 2);
+            values[i+1] = filters.get(i).getValue();
         }
-        for (int j = 0; j < sorts.size(); j++) {
-            allSorts += " v." + sorts.get(j).getProperty() + " " + sorts.get(j).getSortDirection();
-            if (j + 1 < sorts.size())
-                allSorts += ",";
-        }
-        if (sorts.size() == 0) {
-            allSorts += " v.id";
-        }
-
-        if (filters.size() > 0) {
-            //  PanacheQuery<Vacancy> queryVacancy = find("from Vacancy v " +
-            // allFilters + "order by" + allSorts, values).page(page);
-            return find("from Vacancy v " +
-                    allFilters + " order by" + allSorts, values);
-        } else
-            return find("from Vacancy v " +
-                    allFilters + "order by" + allSorts);
+        return allFilters.toString();
     }
 
-    public int countVacancy(List<Sorter> sorts, List<Filter> filters) {
-        return queryVacancy(sorts, filters).list().size();
+    private String createSorter(List<Sorter> sorts) {
+        StringBuilder allSorts = new StringBuilder();
+        if (sorts.size() == 0) {
+            allSorts.append(" v.id");
+        }
+        else {
+            for (int j = 0; j < sorts.size(); j++) {
+                allSorts.append(" v.").append(sorts.get(j).getProperty()).append(" ").append(sorts.get(j).getSortDirection());
+                if (j + 1 < sorts.size())
+                    allSorts.append(",");
+            }
+        }
+       return  allSorts.toString();
+    }
+
+    public Long countVacancy(List<Filter> filters, String userId){
+        Long count;
+        Object[] values = new Object[filters.size()+1];
+        String allFilters = createFilter(filters, userId, values);
+        Object o = find("select count(*) " + allFilters, values).firstResult();
+        count = (Long) o;
+        return count;
     }
 
     public Vacancy findByIdAndUserId(UUID id, String userId) {
         return find("id = ?1 and user_id = ?2", id, userId).firstResult();
     }
-
 
 
 }

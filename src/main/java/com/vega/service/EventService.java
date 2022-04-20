@@ -58,6 +58,7 @@ public class EventService {
         event.setEndDate(eventToSave.getEndDate());
         event.setIsCompleted(eventToSave.getIsCompleted());
         event.setVacancyId(eventToSave.getVacancyId());
+        event.setNotifyFor(eventToSave.getNotifyFor());
         repository.persist(event);
         return  event;
     }

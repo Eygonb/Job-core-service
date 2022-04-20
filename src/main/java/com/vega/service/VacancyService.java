@@ -5,26 +5,20 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import io.quarkus.panache.common.Page;
 import com.vega.repositories.VacancyRepository;
-import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @ApplicationScoped
 public class VacancyService {
     @Inject
     VacancyRepository repository;
 
-    public List<Vacancy> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize) {
+    public List<Vacancy> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize, String userId) {
         Page page = Page.of(pageIndex, pageSize);
-        return repository.findAll(sorts,filters ,page);
-        // Vacancy vacancy = new Vacancy();
-        // vacancy.setUserId(SecurityIdentity.USER_ATTRIBUTE);
-        // Predicate<Vacancy> predicateOne = vc -> vc.getUserId().equals(vacancy.getUserId());
-        //  return (List<Vacancy>) vacancies.stream().filter(predicateOne);
+        return repository.findAll(sorts,filters ,page,userId);
     }
 
 
@@ -47,8 +41,8 @@ public class VacancyService {
         return false;
     }
 
-    public Vacancy add(Vacancy vacancyToSave) {
-        vacancyToSave.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+    public Vacancy add(Vacancy vacancyToSave, String userId) {
+        vacancyToSave.setUserId(userId);
         repository.persist(vacancyToSave);
         return repository.findById(vacancyToSave.getId());
     }
@@ -68,8 +62,7 @@ public class VacancyService {
         return  upVacancy;
     }
 
-    public int count(List<Sorter> sorts, List<Filter> filters)
-    {
-        return repository.countVacancy(sorts,filters);
+    public Long count(List<Filter> filters, String userId) {
+        return repository.countVacancy(filters, userId);
     }
 }

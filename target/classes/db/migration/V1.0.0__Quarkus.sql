@@ -35,6 +35,7 @@ CREATE TABLE events
     modified_at timestamptz not null,
     begin_date timestamptz,
     end_date timestamptz,
+    notify_for integer,
     vacancy_id uuid,
     is_completed boolean default false,
     notes  text,
