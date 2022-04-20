@@ -1,7 +1,6 @@
 package com.vega.service;
 
 import com.vega.entities.Contact;
-import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.ContactRepository;
@@ -11,20 +10,15 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @ApplicationScoped
 public class ContactService {
     @Inject
     ContactRepository repository;
 
-    public List<Contact> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize) {
+    public List<Contact> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize, String userId) {
         Page page = Page.of(pageIndex, pageSize);
-        List<Contact> contacts = repository.findAll(sorts,filters ,page);
-        Contact contact = new Contact();
-        contact.setUserId(SecurityIdentity.USER_ATTRIBUTE);
-        Predicate<Contact> predicateOne = c -> c.getUserId().equals(contact.getUserId());
-        return (List<Contact>) contacts.stream().filter(predicateOne);
+        return repository.findAll(sorts,filters ,page,userId);
     }
 
     public Contact get(UUID id) {
@@ -46,8 +40,8 @@ public class ContactService {
         return false;
     }
 
-    public Contact add(Contact contactToSave) {
-        contactToSave.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+    public Contact add(Contact contactToSave, String userId) {
+        contactToSave.setUserId(userId);
         repository.persist(contactToSave);
         return repository.findById(contactToSave.getId());
     }
@@ -68,6 +62,10 @@ public class ContactService {
         contact.setVacancyId(contactToSave.getVacancyId());
         repository.persist(contact);
         return  contact;
+    }
+
+    public Long count(List<Filter> filters, String userId) {
+        return repository.countContact(filters, userId);
     }
 
 }

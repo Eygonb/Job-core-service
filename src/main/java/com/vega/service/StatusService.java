@@ -5,11 +5,10 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.StatusRepository;
 import io.quarkus.panache.common.Page;
-import io.quarkus.security.identity.SecurityIdentity;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
-import java.util.function.Predicate;
+
 
 @ApplicationScoped
 public class StatusService {
@@ -18,12 +17,9 @@ public class StatusService {
     StatusRepository repository;
     Status.StatusKey key;
 
-    public List<Status> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize) {
+    public List<Status> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize, String userId) {
         Page page = Page.of(pageIndex, pageSize);
-        List<Status> statuses = repository.findAll(sorts,filters ,page);
-        key.setUserId(SecurityIdentity.USER_ATTRIBUTE);
-        Predicate<Status> predicateOne = s -> s.getKey().getUserId().equals(key.getUserId());
-        return (List<Status>) statuses.stream().filter(predicateOne);
+        return repository.findAll(sorts,filters ,page,userId);
     }
 
     public Status get(Status.StatusKey id) {
@@ -49,15 +45,23 @@ public class StatusService {
         return false;
     }
 
-    public Status add(Status statusToSave) {
-        repository.persist(statusToSave);
-        return repository.findById(statusToSave.getKey());
+    public Status add(String name, String userId) {
+        Status status = new Status();
+        key.setUserId(userId);
+        key.setNameStatus(name);
+        status.setKey(key);
+        repository.persist(status);
+        return repository.findById(status.getKey());
     }
 
     public Status update(Status.StatusKey id, Status status) {
         Status upStatus = repository.findById(id);
         upStatus.setKey(status.getKey());
         return upStatus;
+    }
+
+    public Long count(List<Filter> filters, String userId) {
+        return repository.countStatus(filters, userId);
     }
 
 }

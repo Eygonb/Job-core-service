@@ -5,25 +5,19 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.EventRepository;
 import io.quarkus.panache.common.Page;
-import io.quarkus.security.identity.SecurityIdentity;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @ApplicationScoped
 public class EventService {
     @Inject
     EventRepository repository;
 
-    public List<Event> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize) {
+    public List<Event> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize, String userId) {
         Page page = Page.of(pageIndex, pageSize);
-        List<Event> events = repository.findAll(sorts,filters ,page);
-        Event event = new Event();
-        event.setUserId(SecurityIdentity.USER_ATTRIBUTE);
-        Predicate<Event> predicateOne = ev -> ev.getUserId().equals(event.getUserId());
-        return (List<Event>) events.stream().filter(predicateOne);
+        return repository.findAll(sorts,filters ,page,userId);
     }
 
     public Event get(UUID id) {
@@ -45,8 +39,8 @@ public class EventService {
         return false;
     }
 
-    public Event add(Event eventToSave) {
-        eventToSave.setUserId(SecurityIdentity.USER_ATTRIBUTE);
+    public Event add(Event eventToSave, String userId) {
+        eventToSave.setUserId(userId);
         repository.persist(eventToSave);
         return repository.findById(eventToSave.getId());
     }
@@ -63,9 +57,11 @@ public class EventService {
         return  event;
     }
 
-
     public List<Event> getByUserId(String userId) {
         return repository.findByUserId(userId);
     }
 
+    public Long count(List<Filter> filters, String userId) {
+        return repository.countEvent(filters, userId);
+    }
 }
