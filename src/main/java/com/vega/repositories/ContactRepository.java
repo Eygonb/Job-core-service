@@ -8,33 +8,29 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import com.vega.entities.Contact;
 import io.quarkus.panache.common.Page;
 
-
 import javax.enterprise.context.ApplicationScoped;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 @ApplicationScoped
 public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
 
     public List<Contact> findAll(List<Sorter> sorts, List<Filter> filters, Page page, String userId) {
-        Object[] values = new Object[filters.size() + 1];
-        String allFilters = createFilter(filters, userId, values);
+        Map<String, Object> bindValues = getBindingValues(filters, userId);
+        String allFilters = createFilter(filters);
         String allSorts = createSorter(sorts);
-        return find(allFilters + " order by" + allSorts, values).page(page).list();
+        return find(allFilters + " order by" + allSorts, bindValues).page(page).list();
     }
 
-    private String createFilter(List<Filter> filters, String userId, Object[] values) {
-        StringBuilder allFilters = new StringBuilder("from Contact c where c.userId = ?1");
-        values[0] = userId;
+    private String createFilter(List<Filter> filters) {
+        StringBuilder allFilters = new StringBuilder("from Contact c where c.userId = :userId");
         CreationMapper mapper = new CreationMapper();
         Map<Operator, String> map = mapper.getMap();
-        for (int i = 0; i < filters.size(); i++) {
-            String operator;
-            operator = map.get(filters.get(i).getOperator());
-            allFilters.append(" and c.").append(filters.get(i).getProperty()).append(" ").append(operator).append(" ?").append(i + 2);
-            values[i + 1] = filters.get(i).getValue();
+        for (Filter filter : filters) {
+            String operator = map.get(filter.getOperator());
+            String property = filter.getProperty();
+
+            allFilters.append(" and c.").append(property).append(" ").append(operator).append(" :").append(property);
         }
         return allFilters.toString();
     }
@@ -54,10 +50,10 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
     }
 
     public Long countContact(List<Filter> filters, String userId) {
+        Map<String, Object> bindValues = getBindingValues(filters, userId);
+        String allFilters = createFilter(filters);
         Long count;
-        Object[] values = new Object[filters.size() + 1];
-        String allFilters = createFilter(filters, userId, values);
-        Object o = find("select count(*) " + allFilters, values).firstResult();
+        Object o = find("select count(*) " + allFilters, bindValues).firstResult();
         count = (Long) o;
         return count;
     }
@@ -66,5 +62,14 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
         return find("id = ?1 and user_id = ?2", id, userId).firstResult();
     }
 
+    private Map<String, Object> getBindingValues(List<Filter> filters, String userId) {
+        Map<String, Object> bindValues = new HashMap<>();
 
+        bindValues.put("userId", userId);
+        for (Filter filter : filters) {
+            bindValues.put(filter.getProperty(), filter.getValue());
+        }
+
+        return bindValues;
+    }
 }

@@ -4,6 +4,7 @@ CREATE TABLE statuses
     created_at timestamptz,
     modified_at timestamptz,
     user_id text not null,
+    order_num integer not null,
     CONSTRAINT pk_status primary key(user_id,name_status)
 
 );

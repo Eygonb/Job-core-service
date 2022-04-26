@@ -24,6 +24,9 @@ public class Status {
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
+    @Column(name = "order_num")
+    private Integer orderNum;
+
     public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
@@ -48,12 +51,12 @@ public class Status {
         this.key = key;
     }
 
-    public void setUserId(String userId) {
-        key.setUserId(userId);
+    public Integer getOrderNum() {
+        return orderNum;
     }
 
-    public void setName(String name) {
-        key.setNameStatus(name);
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
     }
 
     @EqualsAndHashCode
