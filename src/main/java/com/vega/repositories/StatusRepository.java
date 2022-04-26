@@ -7,12 +7,9 @@ import com.vega.enums.Operator;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import com.vega.entities.Status;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.PersistenceException;
@@ -39,7 +36,7 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
         Map<Operator, String> map = mapper.getMap();
         for (int i = 0; i < filters.size(); i++) {
             String operator;
-            operator = map.get(filters.get(i).getFilterOperator());
+            operator = map.get(filters.get(i).getOperator());
             allFilters.append(" and s.").append(filters.get(i).getProperty()).append(" ").append(operator).append(" ?").append(i + 2);
             values[i+1] = filters.get(i).getValue();
         }
@@ -48,7 +45,7 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
 
     private String createSorter(List<Sorter> sorts) {
         StringBuilder allSorts = new StringBuilder();
-        if (sorts.size() == 0) {
+        if (sorts.isEmpty()) {
             allSorts.append(" s.id");
         }
         else {

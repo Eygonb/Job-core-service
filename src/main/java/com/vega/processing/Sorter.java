@@ -3,7 +3,6 @@ package com.vega.processing;
 import com.vega.enums.Direction;
 
 public class Sorter {
-
     private String property;
 
     private Direction sortDirection;
@@ -15,7 +14,6 @@ public class Sorter {
     public void setSortDirection(Direction sortDirection) {
         this.sortDirection = sortDirection;
     }
-
 
     public String getProperty() {
         return property;

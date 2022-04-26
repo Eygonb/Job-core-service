@@ -21,115 +21,115 @@ public class Event {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private String userId;
 
-    @Column(name="vacancy_id")
+    @Column(name = "vacancy_id")
     private UUID vacancyId;
 
     @Column
     private String name;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at", updatable=false)
+    @Column(name = "modified_at", updatable = false)
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
-    @Column(name="begin_date")
+    @Column(name = "begin_date")
     private ZonedDateTime beginDate;
 
-    @Column(name="end_date")
+    @Column(name = "end_date")
     private ZonedDateTime endDate;
 
-    @Column(name="notify_for")
+    @Column(name = "notify_for")
     private Integer notifyFor;
 
     @Column
     private String notes;
 
-    @Column(name="is_completed")
+    @Column(name = "is_completed")
     private Boolean isCompleted;
 
-    public UUID getId(){
+    public UUID getId() {
         return id;
     }
 
-    public void setId(UUID id){
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public UUID getVacancyId(){
+    public UUID getVacancyId() {
         return vacancyId;
     }
 
-    public void setVacancyId(UUID vacancyId){
+    public void setVacancyId(UUID vacancyId) {
         this.vacancyId = vacancyId;
     }
 
-    public String getUserId(){
+    public String getUserId() {
         return userId;
     }
-    
-    public void setUserId(String userId){
+
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
-    
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getNotes(){
+    public String getNotes() {
         return notes;
     }
-    
-    public void setNotes(String notes){
+
+    public void setNotes(String notes) {
         this.notes = notes;
     }
-    
-    public ZonedDateTime getCreatedAt(){
+
+    public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
-    
-    public void setCreatedAt(ZonedDateTime createdAt){
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
     }
-        
-    public ZonedDateTime getModifiedAt(){
+
+    public ZonedDateTime getModifiedAt() {
         return modifiedAt;
     }
-    
-    public void setModifiedAt(ZonedDateTime modifiedAt){
+
+    public void setModifiedAt(ZonedDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
-   
-    public ZonedDateTime getBeginDate(){
+
+    public ZonedDateTime getBeginDate() {
         return beginDate;
     }
-    
-    public void setBeginDate(ZonedDateTime beginDate){
+
+    public void setBeginDate(ZonedDateTime beginDate) {
         this.beginDate = beginDate;
     }
-       
-    public ZonedDateTime getEndDate(){
+
+    public ZonedDateTime getEndDate() {
         return endDate;
     }
-    
-    public void setEndDate(ZonedDateTime endDate){
+
+    public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
     }
-           
-    public Boolean getIsCompleted(){
+
+    public Boolean getIsCompleted() {
         return isCompleted;
     }
-    
-    public void setIsCompleted(Boolean isCompleted){
+
+    public void setIsCompleted(Boolean isCompleted) {
         this.isCompleted = isCompleted;
     }
 

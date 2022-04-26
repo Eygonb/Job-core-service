@@ -35,11 +35,10 @@ public class VacancyResource {
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
-          //  String userId = "quarkus.user";
             List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<>() {});
             List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
-            List<Vacancy> vacancyList = service.getAll(sorts, filters,pageIndex,pageSize,userId);
-            Long countVacancy = service.count(filters,userId);
+            List<Vacancy> vacancyList = service.getAll(sorts, filters, pageIndex, pageSize, userId);
+            Long countVacancy = service.count(filters, userId);
             return Response.ok(vacancyList).
                     header("X-Total-Count", countVacancy).build();
         }
@@ -47,7 +46,7 @@ public class VacancyResource {
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     public Response getOne(@PathParam("id") UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
@@ -62,8 +61,8 @@ public class VacancyResource {
 
     @Transactional
     @DELETE
-    @Path("{id}")
-    public Response deleteVacancyById(@PathParam("id")  UUID id) {
+    @Path("/{id}")
+    public Response deleteVacancyById(@PathParam("id") UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             if (!service.deleteWithUserId(id, userId)) {
@@ -85,9 +84,9 @@ public class VacancyResource {
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Transactional
-    public Response edit(@PathParam("id")  UUID id, Vacancy vacancyToSave) {
+    public Response edit(@PathParam("id") UUID id, Vacancy vacancyToSave) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             if (service.getByIdAndUserId(id, userId) == null) {

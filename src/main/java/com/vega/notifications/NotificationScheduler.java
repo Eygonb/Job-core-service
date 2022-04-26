@@ -10,7 +10,7 @@ public class NotificationScheduler {
     @Inject
     NotificationSender sender;
 
-    @Scheduled(every="{scheduled.time}")
+    @Scheduled(every = "{scheduled.time}")
     void send() {
         sender.sendCurrentNotifications();
     }

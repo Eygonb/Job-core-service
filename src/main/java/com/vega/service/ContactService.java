@@ -6,6 +6,7 @@ import com.vega.processing.Sorter;
 import com.vega.repositories.ContactRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.security.identity.SecurityIdentity;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ContactService {
 
     public List<Contact> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize, String userId) {
         Page page = Page.of(pageIndex, pageSize);
-        return repository.findAll(sorts,filters ,page,userId);
+        return repository.findAll(sorts, filters, page, userId);
     }
 
     public Contact get(UUID id) {
@@ -61,7 +62,7 @@ public class ContactService {
         contact.setVk(contactToSave.getVk());
         contact.setVacancyId(contactToSave.getVacancyId());
         repository.persist(contact);
-        return  contact;
+        return contact;
     }
 
     public Long count(List<Filter> filters, String userId) {

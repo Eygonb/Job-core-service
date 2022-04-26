@@ -5,6 +5,7 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.EventRepository;
 import io.quarkus.panache.common.Page;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
@@ -17,7 +18,7 @@ public class EventService {
 
     public List<Event> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize, String userId) {
         Page page = Page.of(pageIndex, pageSize);
-        return repository.findAll(sorts,filters ,page,userId);
+        return repository.findAll(sorts, filters, page, userId);
     }
 
     public Event get(UUID id) {
@@ -54,7 +55,7 @@ public class EventService {
         event.setVacancyId(eventToSave.getVacancyId());
         event.setNotifyFor(eventToSave.getNotifyFor());
         repository.persist(event);
-        return  event;
+        return event;
     }
 
     public List<Event> getByUserId(String userId) {

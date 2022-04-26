@@ -3,28 +3,19 @@ package com.vega.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vega.entities.Contact;
 import com.vega.entities.Event;
-import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
-import com.vega.repositories.EventRepository;
 import com.vega.service.EventService;
-import org.eclipse.microprofile.jwt.JsonWebToken;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import io.quarkus.panache.common.Page;
-import io.quarkus.security.identity.SecurityIdentity;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.inject.Inject;
-import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @Path("/events")
 @Produces(MediaType.APPLICATION_JSON)
@@ -32,10 +23,8 @@ import java.util.function.Predicate;
 public class EventResource {
     @Inject
     JsonWebToken jwt;
-
     @Inject
     EventService service;
-
     @Inject
     ObjectMapper objectMapper;
 
@@ -44,21 +33,20 @@ public class EventResource {
                            @QueryParam("filter") @DefaultValue("[]") String filterParam,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
-      //  if (checkJwt()) {
-           // String userId = jwt.getClaim("sub");
-            String userId = "quarkus.user";
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
             List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<>() {});
             List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
-            List<Event> eventList = service.getAll(sorts, filters,pageIndex,pageSize,userId);
-            Long countVacancy = service.count(filters,userId);
+            List<Event> eventList = service.getAll(sorts, filters, pageIndex, pageSize, userId);
+            Long countVacancy = service.count(filters, userId);
             return Response.ok(eventList).
                     header("X-Total-Count", countVacancy).build();
-       // }
-      //  return Response.status(401).build();
+        }
+        return Response.status(401).build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     public Response getOne(@PathParam("id") UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
@@ -73,7 +61,7 @@ public class EventResource {
 
     @Transactional
     @DELETE
-    @Path("{id}")
+    @Path("/{id}")
     public Response deleteEventById(@PathParam("id") UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
@@ -87,17 +75,16 @@ public class EventResource {
     @POST
     @Transactional
     public Response createEvent(Event eventToSave) {
-     //   if (checkJwt()) {
-           // String userId = jwt.getClaim("sub");
-            String userId = "quarkus.user";
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
             Event event = service.add(eventToSave, userId);
             return Response.ok(event).build();
-       // }
-      //  return Response.status(401).build();
+        }
+        return Response.status(401).build();
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Transactional
     public Response edit(@PathParam("id") UUID id, Event eventToSave) {
         if (checkJwt()) {

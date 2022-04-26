@@ -3,25 +3,23 @@ package com.vega.processing;
 import com.vega.enums.Operator;
 
 public class Filter {
-
     private String property;
-    private Object value;
-    private Operator filterOperator;
+    private String value;
+    private Operator operator;
 
-    public Operator getFilterOperator() {
-        return filterOperator;
+    public Operator getOperator() {
+        return operator;
     }
 
-    public void setFilterOperator(Operator filterOperator) {
-        this.filterOperator = filterOperator;
+    public void setOperator(Operator operator) {
+        this.operator = operator;
     }
 
-
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
@@ -32,8 +30,4 @@ public class Filter {
     public void setProperty(String property) {
         this.property = property;
     }
-
-
-
-
 }

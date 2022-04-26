@@ -18,7 +18,7 @@ public class VacancyService {
 
     public List<Vacancy> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize, String userId) {
         Page page = Page.of(pageIndex, pageSize);
-        return repository.findAll(sorts,filters ,page,userId);
+        return repository.findAll(sorts, filters, page, userId);
     }
 
 
@@ -59,7 +59,7 @@ public class VacancyService {
         upVacancy.setNotes(vacancy.getNotes());
         upVacancy.setContacts(vacancy.getContacts());
         upVacancy.setEvents(vacancy.getEvents());
-        return  upVacancy;
+        return upVacancy;
     }
 
     public Long count(List<Filter> filters, String userId) {

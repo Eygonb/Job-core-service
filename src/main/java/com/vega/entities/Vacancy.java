@@ -23,27 +23,27 @@ public class Vacancy {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private String userId;
 
-    @Column(name="name_vacancy")
+    @Column(name = "name_vacancy")
     private String nameVacancy;
 
-    @Column(name="status_name")
+    @Column(name = "status_name")
     private String statusName;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at", updatable=false)
+    @Column(name = "modified_at", updatable = false)
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
-    @Column(name="location_latitude")
+    @Column(name = "location_latitude")
     private Float locationLatitude;
 
-    @Column(name="location_longitude")
+    @Column(name = "location_longitude")
     private Float locationLongitude;
 
     @Column
@@ -56,101 +56,98 @@ public class Vacancy {
     private String notes;
 
     @OneToMany
-    @JoinColumn(name="vacancy_id")
+    @JoinColumn(name = "vacancy_id")
     private Collection<Event> events;
 
     @OneToMany
-    @JoinColumn(name="vacancy_id")
+    @JoinColumn(name = "vacancy_id")
     private List<Contact> contacts;
 
-
-    public Vacancy(){}
-
-    public UUID getId(){
+    public UUID getId() {
         return id;
     }
 
-    public void setId(UUID id){
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public String getUserId(){
+    public String getUserId() {
         return userId;
     }
-    
-    public void setUserId(String userId){
+
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public String getNameVacancy(){
+    public String getNameVacancy() {
         return nameVacancy;
     }
-    
-    public void setNameVacancy(String nameVacancy){
+
+    public void setNameVacancy(String nameVacancy) {
         this.nameVacancy = nameVacancy;
     }
 
-    public String getStatusName(){
+    public String getStatusName() {
         return statusName;
     }
 
-    public void setStatusName(String statusName){
+    public void setStatusName(String statusName) {
         this.statusName = statusName;
     }
-    
-    public String getCompany(){
+
+    public String getCompany() {
         return company;
     }
-    
-    public void setCompany(String company){
+
+    public void setCompany(String company) {
         this.company = company;
     }
 
-    public String getNotes(){
+    public String getNotes() {
         return notes;
     }
-    
-    public void setNotes(String notes){
+
+    public void setNotes(String notes) {
         this.notes = notes;
     }
 
-    public Integer getSalary(){
+    public Integer getSalary() {
         return salary;
     }
-    
-    public void setSalary(Integer salary){
+
+    public void setSalary(Integer salary) {
         this.salary = salary;
     }
-    
-    public ZonedDateTime getCreatedAt(){
+
+    public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
-    
-    public void setCreatedAt(ZonedDateTime createdAt){
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
     }
-        
-    public ZonedDateTime getModifiedAt(){
+
+    public ZonedDateTime getModifiedAt() {
         return modifiedAt;
     }
-    
-    public void setModifiedAt(ZonedDateTime modifiedAt){
+
+    public void setModifiedAt(ZonedDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
-        
-    public Float getLocationLatitude(){
+
+    public Float getLocationLatitude() {
         return locationLatitude;
     }
-    
-    public void setLocationLatitude(Float locationLatitude){
+
+    public void setLocationLatitude(Float locationLatitude) {
         this.locationLatitude = locationLatitude;
     }
-            
-    public Float getLocationLongitude(){
+
+    public Float getLocationLongitude() {
         return locationLongitude;
     }
-    
-    public void setLocationLongitude(Float locationLongitude){
+
+    public void setLocationLongitude(Float locationLongitude) {
         this.locationLongitude = locationLongitude;
     }
 

@@ -10,7 +10,7 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.service.StatusService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import io.quarkus.security.identity.SecurityIdentity;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -27,7 +27,6 @@ public class StatusResource {
     @Inject
     StatusService service;
     Status.StatusKey key;
-
     @Inject
     ObjectMapper objectMapper;
 
@@ -36,24 +35,22 @@ public class StatusResource {
                            @QueryParam("filter") @DefaultValue("[]") String filterParam,
                            @QueryParam("page") @DefaultValue("0") int pageIndex,
                            @QueryParam("size") @DefaultValue("20") int pageSize) throws JsonProcessingException {
-      //  if (checkJwt()) {
-            //String userId = jwt.getClaim("sub");
-            String userId = "quarkus.user";
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
             List<Sorter> sorts = objectMapper.readValue(sortParam, new TypeReference<>() {});
             List<Filter> filters = objectMapper.readValue(filterParam, new TypeReference<>() {});
-            List<Status> statusList = service.getAll(sorts, filters,pageIndex,pageSize,userId);
-            Long countVacancy = service.count(filters,userId);
+            List<Status> statusList = service.getAll(sorts, filters, pageIndex, pageSize, userId);
+            Long countVacancy = service.count(filters, userId);
             return Response.ok(statusList).
                     header("X-Total-Count", countVacancy).build();
-     //   }
-      //  return Response.status(401).build();
+        }
+        return Response.status(401).build();
     }
 
 
     @GET
-    @Path("{name}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("name") String name){
+    @Path("/{name}")
+    public Response get(@PathParam("name") String name) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
             key.setNameStatus(name);
@@ -67,9 +64,9 @@ public class StatusResource {
         return Response.status(401).build();
     }
 
-    @Transactional
-    @Path("{name}")
     @DELETE
+    @Path("/{name}")
+    @Transactional
     public Response deleteStatusByKey(@PathParam("name") String name) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
@@ -85,22 +82,20 @@ public class StatusResource {
     @POST
     @Transactional
     public Response createStatus(String nameStatus) {
-       // if (checkJwt()) {
-           // String userId = jwt.getClaim("sub");
-            String userId = "quarkus.user";
-            Status statuses = service.add(nameStatus,userId);
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            Status statuses = service.add(nameStatus, userId);
             return Response.ok(statuses).build();
-       // }
-       // return Response.status(401).build();
+        }
+        return Response.status(401).build();
     }
 
     @PUT
-    @Path("{name}")
+    @Path("/{name}")
     @Transactional
-    public Response edit(@PathParam("name") String name, Status statusToSave){
+    public Response edit(@PathParam("name") String name, Status statusToSave) {
         if (checkJwt()) {
-           // String userId = jwt.getClaim("sub");
-            String userId = "quarkus.user";
+            String userId = jwt.getClaim("sub");
             key.setNameStatus(name);
             key.setUserId(userId);
             if (service.get(key) == null) {

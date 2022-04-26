@@ -16,49 +16,64 @@ public class Status {
     @EmbeddedId
     private StatusKey key;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at", updatable=false)
+    @Column(name = "modified_at", updatable = false)
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
-    public ZonedDateTime getCreatedAt(){
+    public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(ZonedDateTime createdAt){
+    public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public ZonedDateTime getModifiedAt(){
+    public ZonedDateTime getModifiedAt() {
         return modifiedAt;
     }
 
-    public void setModifiedAt(ZonedDateTime modifiedAt){
+    public void setModifiedAt(ZonedDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
 
-    public StatusKey getKey(){
+    public StatusKey getKey() {
         return key;
     }
 
-    public void setKey(StatusKey key){
+    public void setKey(StatusKey key) {
         this.key = key;
+    }
+
+    public void setUserId(String userId) {
+        key.setUserId(userId);
+    }
+
+    public void setName(String name) {
+        key.setNameStatus(name);
     }
 
     @EqualsAndHashCode
     @ToString
     @Embeddable
-    public class StatusKey implements Serializable {
+    public static class StatusKey implements Serializable {
+        public StatusKey() {
+        }
+
+        public StatusKey(String nameStatus, String userId) {
+            this.nameStatus = nameStatus;
+            this.userId = userId;
+        }
 
         static final long serialVersionUID = 1L;
 
-        @Column(name="name_status")
+        @Column(name = "name_status")
         private String nameStatus;
 
-        @Column(name="user_id")
+        @Column(name = "user_id")
         private String userId;
 
         public String getNameStatus() {

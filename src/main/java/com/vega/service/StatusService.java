@@ -5,21 +5,19 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.StatusRepository;
 import io.quarkus.panache.common.Page;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 
-
 @ApplicationScoped
 public class StatusService {
-
     @Inject
     StatusRepository repository;
-    Status.StatusKey key;
 
     public List<Status> getAll(List<Sorter> sorts, List<Filter> filters, int pageIndex, int pageSize, String userId) {
         Page page = Page.of(pageIndex, pageSize);
-        return repository.findAll(sorts,filters ,page,userId);
+        return repository.findAll(sorts, filters, page, userId);
     }
 
     public Status get(Status.StatusKey id) {
@@ -34,8 +32,11 @@ public class StatusService {
         return null;
     }
 
-    public Boolean delete(Status.StatusKey id) {
-        return repository.deleteById(id);
+    public Boolean delete(Status.StatusKey key) {
+        if (get(key) != null) {
+            return repository.deleteById(key);
+        }
+        return false;
     }
 
     public Boolean deleteWithUserId(Status.StatusKey id, String userId) {
@@ -47,6 +48,7 @@ public class StatusService {
 
     public Status add(String name, String userId) {
         Status status = new Status();
+        Status.StatusKey key = new Status.StatusKey();
         key.setUserId(userId);
         key.setNameStatus(name);
         status.setKey(key);

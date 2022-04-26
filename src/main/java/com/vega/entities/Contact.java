@@ -22,23 +22,23 @@ public class Contact {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private String userId;
 
-    @Column(name="vacancy_id")
+    @Column(name = "vacancy_id")
     private UUID vacancyId;
 
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name="modified_at", updatable=false)
+    @Column(name = "modified_at", updatable = false)
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
@@ -57,10 +57,10 @@ public class Contact {
     @Column
     private String skype;
 
-    @Column(name="vk_id")
+    @Column(name = "vk_id")
     private String vkId;
 
-    @Column(name="telegram_id")
+    @Column(name = "telegram_id")
     private String telegramId;
 
     @Column
@@ -69,131 +69,131 @@ public class Contact {
     @Column
     private String notes;
 
-    public UUID getId(){
+    public UUID getId() {
         return id;
     }
 
-    public void setId(UUID id){
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public UUID getVacancyId(){
+    public UUID getVacancyId() {
         return vacancyId;
     }
 
-    public void setVacancyId(UUID vacancyId){
+    public void setVacancyId(UUID vacancyId) {
         this.vacancyId = vacancyId;
     }
 
-    public String getUserId(){
+    public String getUserId() {
         return userId;
     }
-    
-    public void setUserId(String userId){
+
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public String getFirstName(){
+    public String getFirstName() {
         return firstName;
     }
-    
-    public void setFirstName(String firstName){
+
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
-    public String getLastName(){
+
+    public String getLastName() {
         return lastName;
     }
-    
-    public void setLastName(String lastName){
+
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public String getCompany(){
+    public String getCompany() {
         return company;
     }
-    
-    public void setCompany(String company){
+
+    public void setCompany(String company) {
         this.company = company;
     }
 
-    public String getNotes(){
+    public String getNotes() {
         return notes;
     }
-    
-    public void setNotes(String notes){
+
+    public void setNotes(String notes) {
         this.notes = notes;
     }
-    
-    public ZonedDateTime getCreatedAt(){
+
+    public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
-    
-    public void setCreatedAt(ZonedDateTime createdAt){
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
     }
-        
-    public ZonedDateTime getModifiedAt(){
+
+    public ZonedDateTime getModifiedAt() {
         return modifiedAt;
     }
-    
-    public void setModifiedAt(ZonedDateTime modifiedAt){
+
+    public void setModifiedAt(ZonedDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
-    
-    public String getCity(){
+
+    public String getCity() {
         return city;
     }
-    
-    public void setCity(String city){
+
+    public void setCity(String city) {
         this.city = city;
     }
-    
-    public String getTelephone(){
+
+    public String getTelephone() {
         return telephone;
     }
-    
-    public void setTelephone(String telephone){
+
+    public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-    
-    public String getSkype(){
+
+    public String getSkype() {
         return skype;
     }
-    
-    public void setSkype(String skype){
+
+    public void setSkype(String skype) {
         this.skype = skype;
     }
 
-    public String getVk(){
+    public String getVk() {
         return vkId;
     }
-    
-    public void setVk(String vkId){
+
+    public void setVk(String vkId) {
         this.vkId = vkId;
     }
-    
-    public String getTelegram(){
+
+    public String getTelegram() {
         return telegramId;
     }
-    
-    public void setTelegram(String telegramId){
+
+    public void setTelegram(String telegramId) {
         this.telegramId = telegramId;
     }
-    
-    public String getPosition(){
+
+    public String getPosition() {
         return position;
     }
-    
-    public void setPosition(String position){
+
+    public void setPosition(String position) {
         this.position = position;
     }
 
-    public String getMail(){
+    public String getMail() {
         return mail;
     }
-    
-    public void setMail(String mail){
+
+    public void setMail(String mail) {
         this.mail = mail;
     }
 }
