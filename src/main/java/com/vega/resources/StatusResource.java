@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vega.entities.Status;
-import com.vega.entities.Vacancy;
 import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.service.StatusService;
@@ -26,7 +25,6 @@ public class StatusResource {
     JsonWebToken jwt;
     @Inject
     StatusService service;
-    Status.StatusKey key;
     @Inject
     ObjectMapper objectMapper;
 
@@ -53,6 +51,7 @@ public class StatusResource {
     public Response get(@PathParam("name") String name) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
+            Status.StatusKey key = new Status.StatusKey();
             key.setNameStatus(name);
             key.setUserId(userId);
             Status status = service.getByIdAndUserId(key, userId);
@@ -70,11 +69,13 @@ public class StatusResource {
     public Response deleteStatusByKey(@PathParam("name") String name) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
+            Status.StatusKey key = new Status.StatusKey();
             key.setNameStatus(name);
             key.setUserId(userId);
             if (!service.deleteWithUserId(key, userId)) {
                 return Response.status(404).build();
             }
+            return Response.status(200).build();
         }
         return Response.status(401).build();
     }
@@ -84,7 +85,10 @@ public class StatusResource {
     public Response createStatus(String nameStatus) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
-            Status statuses = service.add(nameStatus, userId);
+            Status.StatusKey key = new Status.StatusKey();
+            key.setNameStatus(nameStatus);
+            key.setUserId(userId);
+            Status statuses = service.add(key);
             return Response.ok(statuses).build();
         }
         return Response.status(401).build();
@@ -96,6 +100,7 @@ public class StatusResource {
     public Response edit(@PathParam("name") String name, Status statusToSave) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
+            Status.StatusKey key = new Status.StatusKey();
             key.setNameStatus(name);
             key.setUserId(userId);
             if (service.get(key) == null) {
@@ -103,6 +108,17 @@ public class StatusResource {
             }
             Status status = service.update(key, statusToSave);
             return Response.ok(status).build();
+        }
+        return Response.status(401).build();
+    }
+
+    @PUT
+    @Transactional
+    public Response editAll(List<Status> statuses) {
+        if (checkJwt()) {
+            String userId = jwt.getClaim("sub");
+            List<Status> changedStatus = service.updateAll(statuses, userId);
+            return Response.ok(changedStatus).build();
         }
         return Response.status(401).build();
     }

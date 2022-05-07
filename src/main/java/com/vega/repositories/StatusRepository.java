@@ -31,7 +31,8 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
             String operator = map.get(filter.getOperator());
             String property = filter.getProperty();
 
-            allFilters.append(" and s.").append(property).append(" ").append(operator).append(" :").append(property.replaceFirst("key.", ""));
+            allFilters.append(" and s.").append(property).append(" ").append(operator).append(" :")
+                    .append(property.replaceFirst("key.", ""));
         }
         return allFilters.toString();
     }
@@ -64,10 +65,16 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
 
         bindValues.put("userId", userId);
         for (Filter filter : filters) {
+            // replace "key." need for fix bug with binding value with "." in name of value
             bindValues.put(filter.getProperty().replaceFirst("key.", ""), filter.getValue());
         }
 
         return bindValues;
+    }
+
+    public Integer getMaxOrderNum() {
+        Object count = find("select max(s.orderNum) from Status s").firstResult();
+        return (Integer) count;
     }
 }
 

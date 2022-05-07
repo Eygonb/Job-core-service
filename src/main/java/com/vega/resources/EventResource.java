@@ -68,6 +68,7 @@ public class EventResource {
             if (!service.deleteWithUserId(id, userId)) {
                 return Response.status(404).build();
             }
+            return Response.status(200).build();
         }
         return Response.status(401).build();
     }

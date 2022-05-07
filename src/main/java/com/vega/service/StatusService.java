@@ -8,6 +8,7 @@ import io.quarkus.panache.common.Page;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -46,19 +47,31 @@ public class StatusService {
         return false;
     }
 
-    public Status add(String name, String userId) {
+    public Status add(Status.StatusKey key) {
         Status status = new Status();
-        Status.StatusKey key = new Status.StatusKey();
-        key.setUserId(userId);
-        key.setNameStatus(name);
         status.setKey(key);
+        status.setOrderNum(repository.getMaxOrderNum() + 1);
         repository.persist(status);
         return repository.findById(status.getKey());
     }
 
-    public Status update(Status.StatusKey id, Status status) {
-        Status upStatus = repository.findById(id);
+    public List<Status> updateAll(List<Status> statuses, String userId) {
+        List<Status> changedStatuses = new ArrayList<>();
+        for (int i = 0; i < statuses.size(); i++) {
+            if (statuses.get(i).getKey().getUserId().equals(userId)) {
+                statuses.get(i).setOrderNum(i);
+                changedStatuses.add(update(statuses.get(i).getKey(), statuses.get(i)));
+            }
+        }
+        return changedStatuses;
+    }
+
+    public Status update(Status.StatusKey key, Status status) {
+        Status upStatus = repository.findById(key);
         upStatus.setKey(status.getKey());
+        if (upStatus.getOrderNum() != null) {
+            upStatus.setOrderNum(status.getOrderNum());
+        }
         return upStatus;
     }
 
