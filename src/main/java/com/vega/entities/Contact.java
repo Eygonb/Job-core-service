@@ -42,8 +42,11 @@ public class Contact {
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
-    @Column
-    private String city;
+    @Column(name = "location_latitude")
+    private Float locationLatitude;
+
+    @Column(name = "location_longitude")
+    private Float locationLongitude;
 
     @Column
     private String company;
@@ -141,12 +144,20 @@ public class Contact {
         this.modifiedAt = modifiedAt;
     }
 
-    public String getCity() {
-        return city;
+    public Float getLocationLatitude() {
+        return locationLatitude;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocationLatitude(Float locationLatitude) {
+        this.locationLatitude = locationLatitude;
+    }
+
+    public Float getLocationLongitude() {
+        return locationLongitude;
+    }
+
+    public void setLocationLongitude(Float locationLongitude) {
+        this.locationLongitude = locationLongitude;
     }
 
     public String getTelephone() {
@@ -165,19 +176,19 @@ public class Contact {
         this.skype = skype;
     }
 
-    public String getVk() {
+    public String getVkId() {
         return vkId;
     }
 
-    public void setVk(String vkId) {
+    public void setVkId(String vkId) {
         this.vkId = vkId;
     }
 
-    public String getTelegram() {
+    public String getTelegramId() {
         return telegramId;
     }
 
-    public void setTelegram(String telegramId) {
+    public void setTelegramId(String telegramId) {
         this.telegramId = telegramId;
     }
 

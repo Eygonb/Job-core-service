@@ -88,8 +88,8 @@ public class StatusResource {
             Status.StatusKey key = new Status.StatusKey();
             key.setNameStatus(nameStatus);
             key.setUserId(userId);
-            Status statuses = service.add(key);
-            return Response.ok(statuses).build();
+            Status status = service.add(key);
+            return Response.ok(status).build();
         }
         return Response.status(401).build();
     }
@@ -103,6 +103,7 @@ public class StatusResource {
             Status.StatusKey key = new Status.StatusKey();
             key.setNameStatus(name);
             key.setUserId(userId);
+            statusToSave.getKey().setUserId(userId);
             if (service.get(key) == null) {
                 return Response.status(204).build();
             }

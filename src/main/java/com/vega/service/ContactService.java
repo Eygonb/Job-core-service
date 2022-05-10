@@ -5,7 +5,6 @@ import com.vega.processing.Filter;
 import com.vega.processing.Sorter;
 import com.vega.repositories.ContactRepository;
 import io.quarkus.panache.common.Page;
-import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -51,15 +50,16 @@ public class ContactService {
         Contact contact = repository.findById(id);
         contact.setFirstName(contactToSave.getFirstName());
         contact.setLastName(contactToSave.getLastName());
-        contact.setCity(contactToSave.getCity());
+        contact.setLocationLatitude(contactToSave.getLocationLatitude());
+        contact.setLocationLongitude(contactToSave.getLocationLongitude());
         contact.setCompany(contactToSave.getCompany());
         contact.setSkype(contactToSave.getSkype());
-        contact.setTelegram(contactToSave.getTelegram());
+        contact.setTelegramId(contactToSave.getTelegramId());
         contact.setTelephone(contactToSave.getTelephone());
         contact.setNotes(contactToSave.getNotes());
         contact.setMail(contactToSave.getMail());
         contact.setPosition(contactToSave.getPosition());
-        contact.setVk(contactToSave.getVk());
+        contact.setVkId(contactToSave.getVkId());
         contact.setVacancyId(contactToSave.getVacancyId());
         repository.persist(contact);
         return contact;

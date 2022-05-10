@@ -68,8 +68,9 @@ public class StatusService {
 
     public Status update(Status.StatusKey key, Status status) {
         Status upStatus = repository.findById(key);
-        upStatus.setKey(status.getKey());
-        if (upStatus.getOrderNum() != null) {
+        upStatus.getKey().setUserId(status.getKey().getUserId());
+        upStatus.getKey().setNameStatus(status.getKey().getNameStatus());
+        if (status.getOrderNum() != null) {
             upStatus.setOrderNum(status.getOrderNum());
         }
         return upStatus;
@@ -78,5 +79,4 @@ public class StatusService {
     public Long count(List<Filter> filters, String userId) {
         return repository.countStatus(filters, userId);
     }
-
 }
