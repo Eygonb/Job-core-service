@@ -51,7 +51,7 @@ public class VacancyService {
     public Vacancy update(UUID id, Vacancy vacancy) {
         Vacancy upVacancy = repository.findById(id);
         upVacancy.setNameVacancy(vacancy.getNameVacancy());
-        upVacancy.setStatusName(vacancy.getStatusName());
+        upVacancy.setStatusId(vacancy.getStatusId());
         upVacancy.setLocationLatitude(vacancy.getLocationLatitude());
         upVacancy.setLocationLongitude(vacancy.getLocationLongitude());
         upVacancy.setCompany(vacancy.getCompany());

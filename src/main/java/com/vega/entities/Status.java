@@ -3,18 +3,31 @@ package com.vega.entities;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "statuses")
 public class Status {
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
-    @EmbeddedId
-    private StatusKey key;
+    @Column(name = "name_status")
+    private String nameStatus;
+
+    @Column(name = "user_id")
+    private String userId;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -43,12 +56,28 @@ public class Status {
         this.modifiedAt = modifiedAt;
     }
 
-    public StatusKey getKey() {
-        return key;
+    public UUID getId() {
+        return id;
     }
 
-    public void setKey(StatusKey key) {
-        this.key = key;
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getNameStatus() {
+        return nameStatus;
+    }
+
+    public void setNameStatus(String nameStatus) {
+        this.nameStatus = nameStatus;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Integer getOrderNum() {
@@ -57,42 +86,5 @@ public class Status {
 
     public void setOrderNum(Integer orderNum) {
         this.orderNum = orderNum;
-    }
-
-    @EqualsAndHashCode
-    @ToString
-    @Embeddable
-    public static class StatusKey implements Serializable {
-        public StatusKey() {
-        }
-
-        public StatusKey(String nameStatus, String userId) {
-            this.nameStatus = nameStatus;
-            this.userId = userId;
-        }
-
-        static final long serialVersionUID = 1L;
-
-        @Column(name = "name_status")
-        private String nameStatus;
-
-        @Column(name = "user_id")
-        private String userId;
-
-        public String getNameStatus() {
-            return nameStatus;
-        }
-
-        public void setNameStatus(String nameStatus) {
-            this.nameStatus = nameStatus;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(String userId) {
-            this.userId = userId;
-        }
     }
 }

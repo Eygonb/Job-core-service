@@ -29,8 +29,8 @@ public class Vacancy {
     @Column(name = "name_vacancy")
     private String nameVacancy;
 
-    @Column(name = "status_name")
-    private String statusName;
+    @Column(name = "status_id")
+    private UUID statusId;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -87,12 +87,12 @@ public class Vacancy {
         this.nameVacancy = nameVacancy;
     }
 
-    public String getStatusName() {
-        return statusName;
+    public UUID getStatusId() {
+        return statusId;
     }
 
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
+    public void setStatusId(UUID statusId) {
+        this.statusId = statusId;
     }
 
     public String getCompany() {

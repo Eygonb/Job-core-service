@@ -12,9 +12,10 @@ import javax.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @ApplicationScoped
-public class StatusRepository implements PanacheRepositoryBase<Status, Status.StatusKey> {
+public class StatusRepository implements PanacheRepositoryBase<Status, UUID> {
 
     public List<Status> findAll(List<Sorter> sorts, List<Filter> filters, Page page, String userId) {
         Map<String, Object> bindValues = getBindingValues(filters, userId);
@@ -24,15 +25,14 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
     }
 
     private String createFilter(List<Filter> filters) {
-        StringBuilder allFilters = new StringBuilder("from Status s where s.key.userId = :userId");
+        StringBuilder allFilters = new StringBuilder("from Status s where s.userId = :userId");
         CreationMapper mapper = new CreationMapper();
         Map<Operator, String> map = mapper.getMap();
         for (Filter filter : filters) {
             String operator = map.get(filter.getOperator());
             String property = filter.getProperty();
 
-            allFilters.append(" and s.").append(property).append(" ").append(operator).append(" :")
-                    .append(property.replaceFirst("key.", ""));
+            allFilters.append(" and s.").append(property).append(" ").append(operator).append(" :").append(property);
         }
         return allFilters.toString();
     }
@@ -65,8 +65,12 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
 
         bindValues.put("userId", userId);
         for (Filter filter : filters) {
-            // replace "key." need for fix bug with binding value with "." in name of value
-            bindValues.put(filter.getProperty().replaceFirst("key.", ""), filter.getValue());
+            try {
+                UUID uuid = UUID.fromString((String) filter.getValue());
+                bindValues.put(filter.getProperty(), uuid);
+            } catch (IllegalArgumentException ex) {
+                bindValues.put(filter.getProperty(), filter.getValue());
+            }
         }
 
         return bindValues;
@@ -75,6 +79,10 @@ public class StatusRepository implements PanacheRepositoryBase<Status, Status.St
     public Integer getMaxOrderNum() {
         Object count = find("select max(s.orderNum) from Status s").firstResult();
         return (Integer) count;
+    }
+
+    public Status findByIdAndUserId(UUID id, String userId) {
+        return find("id = ?1 and user_id = ?2", id, userId).firstResult();
     }
 }
 

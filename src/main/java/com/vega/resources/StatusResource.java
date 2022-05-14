@@ -16,6 +16,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/statuses")
 @Produces(MediaType.APPLICATION_JSON)
@@ -47,14 +48,11 @@ public class StatusResource {
 
 
     @GET
-    @Path("/{name}")
-    public Response get(@PathParam("name") String name) {
+    @Path("/{id}")
+    public Response get(@PathParam("id") UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
-            Status.StatusKey key = new Status.StatusKey();
-            key.setNameStatus(name);
-            key.setUserId(userId);
-            Status status = service.getByIdAndUserId(key, userId);
+            Status status = service.getByIdAndUserId(id, userId);
             if (status == null) {
                 return Response.status(404).build();
             }
@@ -64,15 +62,12 @@ public class StatusResource {
     }
 
     @DELETE
-    @Path("/{name}")
+    @Path("/{id}")
     @Transactional
-    public Response deleteStatusByKey(@PathParam("name") String name) {
+    public Response delete(@PathParam("id") UUID id) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
-            Status.StatusKey key = new Status.StatusKey();
-            key.setNameStatus(name);
-            key.setUserId(userId);
-            if (!service.deleteWithUserId(key, userId)) {
+            if (!service.deleteWithUserId(id, userId)) {
                 return Response.status(404).build();
             }
             return Response.status(200).build();
@@ -82,32 +77,27 @@ public class StatusResource {
 
     @POST
     @Transactional
-    public Response createStatus(String nameStatus) {
+    public Response createStatus(Status statusToSave) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
-            Status.StatusKey key = new Status.StatusKey();
-            key.setNameStatus(nameStatus);
-            key.setUserId(userId);
-            Status status = service.add(key);
-            return Response.ok(status).build();
+
+            Status savedStatus = service.add(statusToSave, userId);
+            return Response.ok(savedStatus).build();
         }
         return Response.status(401).build();
     }
 
     @PUT
-    @Path("/{name}")
+    @Path("/{id}")
     @Transactional
-    public Response edit(@PathParam("name") String name, Status statusToSave) {
+    public Response edit(@PathParam("id") UUID id, Status statusToSave) {
         if (checkJwt()) {
             String userId = jwt.getClaim("sub");
-            Status.StatusKey key = new Status.StatusKey();
-            key.setNameStatus(name);
-            key.setUserId(userId);
-            statusToSave.getKey().setUserId(userId);
-            if (service.get(key) == null) {
+            statusToSave.setUserId(userId);
+            if (service.get(id) == null) {
                 return Response.status(204).build();
             }
-            Status status = service.update(key, statusToSave);
+            Status status = service.update(id, statusToSave);
             return Response.ok(status).build();
         }
         return Response.status(401).build();

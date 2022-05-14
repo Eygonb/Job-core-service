@@ -67,7 +67,12 @@ public class ContactRepository implements PanacheRepositoryBase<Contact, UUID> {
 
         bindValues.put("userId", userId);
         for (Filter filter : filters) {
-            bindValues.put(filter.getProperty(), filter.getValue());
+            try {
+                UUID uuid = UUID.fromString((String) filter.getValue());
+                bindValues.put(filter.getProperty(), uuid);
+            } catch (IllegalArgumentException ex) {
+                bindValues.put(filter.getProperty(), filter.getValue());
+            }
         }
 
         return bindValues;
