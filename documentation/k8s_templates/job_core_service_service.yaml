@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.job_core_service_app_name }}
+spec:
+  selector:
+    app: {{ .Values.job_core_service_api_app_name }}
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090
