@@ -23,8 +23,7 @@ public class Notification {
         this.name = event.getName();
         this.description = event.getNotes();
         ZonedDateTime time = event.getBeginDate();
-        int minutes = time.getMinute();
-        this.startTime = time.getHour() + ":" + (minutes > 9 ? minutes : "0" + minutes);
+        this.startTime = time.toLocalDate().toString() + " " + time.toLocalTime().toString();
     }
 
     public String getUserId() {
