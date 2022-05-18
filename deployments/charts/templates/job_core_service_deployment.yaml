@@ -26,5 +26,11 @@ spec:
             value: {{ .Values.kafka.url }}
           - name: DB_URL
             value: {{ .Values.db.url }}
+          - name: DB_USER
+            value: {{ .Values.db.user }}
+          - name: DB_PASS
+            value: {{ .Values.db.pass }}
           - name: KEYCLOAK_ISSUER
             value: {{ .Values.keycloak.issuer }}
+          - name: UI_URL
+            value: {{ .Values.ui.url }}

@@ -17,11 +17,25 @@ smtp:
     pass: vegaProject_vacancinated
   host: smtp.gmail.com
   port: '587'
+jcs:
+  url: http://127.0.0.1:8080/
+ng:
+  url: http://127.0.0.1:8090/
 kafka:
   url: localhost:9092
 db:
   url: jdbc:postgresql://localhost:5432/vacancinated
+  user: postgres
+  pass: 123
 keycloak:
-  issuer: https://localhost:8543/auth/realms/quarkus
+  issuer: http://localhost:8180/auth/realms/quarkus
+  url: http://localhost:8180/auth
+  realm: vacancinated
+  client_id: frontend-service
+dadata:
+  url: https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address
+  token: 4815badb78f0875abf65ad53879978e0372c462c
+ui:
+  url: http://localhost:3000
 replicas:
   count: 1
