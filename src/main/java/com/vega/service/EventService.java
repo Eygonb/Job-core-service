@@ -50,6 +50,7 @@ public class EventService {
         Event event = repository.findById(id);
         event.setName(eventToSave.getName());
         event.setBeginDate(eventToSave.getBeginDate());
+        event.setNotes(eventToSave.getNotes());
         event.setEndDate(eventToSave.getEndDate());
         event.setIsCompleted(eventToSave.getIsCompleted());
         event.setVacancyId(eventToSave.getVacancyId());
