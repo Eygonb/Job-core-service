@@ -9,10 +9,16 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.*;
 
 @ApplicationScoped
 public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
+    @Inject
+    ContactRepository contactRepository;
+    @Inject
+    EventRepository eventRepository;
+
     public List<Vacancy> findAll(List<Sorter> sorts, List<Filter> filters, Page page, String userId) {
         Map<String, Object> bindValues = getBindingValues(filters, userId);
         String allFilters = createFilter(filters);
@@ -58,6 +64,23 @@ public class VacancyRepository implements PanacheRepositoryBase<Vacancy, UUID> {
 
     public Vacancy findByIdAndUserId(UUID id, String userId) {
         return find("id = ?1 and user_id = ?2", id, userId).firstResult();
+    }
+
+    public Boolean deleteByStatusId(UUID statusId) {
+        List<Vacancy> vacancies = find("status_id", statusId).list();
+        boolean result = true;
+        for (Vacancy vacancy : vacancies) {
+            if (!delete(vacancy.getId())) {
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    public Boolean delete(UUID id) {
+        contactRepository.delete("vacancy_id", id);
+        eventRepository.delete("vacancy_id", id);
+        return deleteById(id);
     }
 
     private Map<String, Object> getBindingValues(List<Filter> filters, String userId) {

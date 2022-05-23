@@ -33,16 +33,9 @@ public class StatusService {
         return repository.findByIdAndUserId(id, userId);
     }
 
-    public Boolean delete(UUID id) {
-        if (get(id) != null) {
-            return repository.deleteById(id);
-        }
-        return false;
-    }
-
     public Boolean deleteWithUserId(UUID id, String userId) {
         if (getByIdAndUserId(id, userId) != null) {
-            vacancyRepository.delete("statusId", id);
+            vacancyRepository.deleteByStatusId(id);
             return repository.deleteById(id);
         }
         return false;
