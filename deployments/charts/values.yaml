@@ -19,14 +19,18 @@ smtp:
   port: '587'
 jcs:
   url: http://127.0.0.1:8080/
+  db:
+    url: jdbc:postgresql://localhost:5432/job_core_service
+    user: postgres
+    pass: 123
 ng:
   url: http://127.0.0.1:8090/
+  db:
+    url: jdbc:postgresql://localhost:5432/notification_gateway
+    user: postgres
+    pass: 123
 kafka:
   url: localhost:9092
-db:
-  url: jdbc:postgresql://localhost:5432/vacancinated
-  user: postgres
-  pass: 123
 keycloak:
   issuer: http://localhost:8180/auth/realms/quarkus
   url: http://localhost:8180/auth
