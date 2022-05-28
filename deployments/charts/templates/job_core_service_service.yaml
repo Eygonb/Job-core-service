@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.job_core_service_app_name }}
 spec:
   selector:
-    app: {{ .Values.job_core_service_api_app_name }}
+    app: {{ .Values.job_core_service_app_name }}
   ports:
     - protocol: TCP
       port: 8080

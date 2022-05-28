@@ -1,5 +1,4 @@
 job_core_service_app_name: job-core-service
-job_core_service_api_app_name: job-core-service-api
 containers:
   job_core_service_image: registry.gitlab.com/vegaproject/job-core-service/image:latest
 db:
