@@ -20,16 +20,16 @@ spec:
       - name: {{ .Values.job_core_service_app_name }}
         image: {{ .Values.containers.job_core_service_image }}
         ports:
-        - containerPort: 8090
+        - containerPort: 8080
         env:
           - name: KAFKA_URL
             value: {{ .Values.kafka.url }}
-          - name: JCS_DB_URL
-            value: {{ .Values.jcs.db.url }}
+          - name: DB_URL
+            value: {{ .Values.db.url }}
           - name: DB_USER
-            value: {{ .Values.jcs.db.user }}
+            value: {{ .Values.db.user }}
           - name: DB_PASS
-            value: {{ .Values.jcs.db.pass }}
+            value: {{ .Values.db.pass }}
           - name: KEYCLOAK_ISSUER
             value: {{ .Values.keycloak.issuer }}
           - name: UI_URL

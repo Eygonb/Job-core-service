@@ -7,5 +7,5 @@ spec:
     app: {{ .Values.job_core_service_api_app_name }}
   ports:
     - protocol: TCP
-      port: 8090
-      targetPort: 8090
+      port: 8080
+      targetPort: 8080

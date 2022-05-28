@@ -1,45 +1,17 @@
-notification_gateway_app_name: notification-gateway
-notification_gateway_api_app_name: notification-gateway-api
 job_core_service_app_name: job-core-service
 job_core_service_api_app_name: job-core-service-api
-user_interface_app_name: user-interface
-user_interface_api_app_name: user-interface-api
 containers:
-  notifications_gateway_image: registry.gitlab.com/vegaproject/notification-gateway/image:latest
   job_core_service_image: registry.gitlab.com/vegaproject/job-core-service/image:latest
-  user_interface_image: registry.gitlab.com/vegaproject/user-interface/image
-bot:
-  name: VacancinatedBot
-  token: 5081691450:AAFq6xHYl7AgTqkapuDLPwz1H6GagPX1gVg
-smtp:
-  mailer:
-    user: vacancinated@gmail.com
-    pass: vegaProject_vacancinated
-  host: smtp.gmail.com
-  port: '587'
-jcs:
-  url: http://127.0.0.1:8080/
-  db:
-    url: jdbc:postgresql://localhost:5432/job_core_service
-    user: postgres
-    pass: 123
-ng:
-  url: http://127.0.0.1:8090/
-  db:
-    url: jdbc:postgresql://localhost:5432/notification_gateway
-    user: postgres
-    pass: 123
+db:
+  url: jdbc:postgresql://postgresql-dev:5432/job_core_service
+  user: postgres
+  pass: wmuljGyLs0
 kafka:
-  url: localhost:9092
+  url: kafka:9092
 keycloak:
-  issuer: http://localhost:8180/auth/realms/quarkus
-  url: http://localhost:8180/auth
+  issuer: http://keycloak:8180/auth/realms/quarkus
+  url: http://keycloak:8180/auth
   realm: vacancinated
   client_id: frontend-service
-dadata:
-  url: https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address
-  token: 4815badb78f0875abf65ad53879978e0372c462c
-ui:
-  url: http://localhost:3000
 replicas:
   count: 1
