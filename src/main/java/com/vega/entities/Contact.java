@@ -34,11 +34,11 @@ public class Contact {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name = "modified_at", updatable = false)
+    @Column(name = "modified_at")
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 

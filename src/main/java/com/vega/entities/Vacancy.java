@@ -32,11 +32,11 @@ public class Vacancy {
     @Column(name = "status_id")
     private UUID statusId;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
-    @Column(name = "modified_at", updatable = false)
+    @Column(name = "modified_at")
     @UpdateTimestamp
     private ZonedDateTime modifiedAt;
 
