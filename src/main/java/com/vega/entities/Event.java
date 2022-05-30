@@ -1,5 +1,6 @@
 package com.vega.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -39,9 +40,11 @@ public class Event {
     private ZonedDateTime modifiedAt;
 
     @Column(name = "begin_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     private ZonedDateTime beginDate;
 
     @Column(name = "end_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     private ZonedDateTime endDate;
 
     @Column(name = "notify_for")
