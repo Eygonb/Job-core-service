@@ -76,7 +76,7 @@ public class EventRepository implements PanacheRepositoryBase<Event, UUID> {
         return entityManager.createNativeQuery(
                         "SELECT e.* " +
                                 "FROM events e " +
-                                "WHERE (begin_date - CAST(notify_for || ' minutes' AS INTERVAL)) = ?", Event.class)
+                                "WHERE (e.begin_date - CAST(e.notify_for || ' minutes' AS INTERVAL)) = ?", Event.class)
                 .setParameter(1, ZonedDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .getResultList();
     }
