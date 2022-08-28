@@ -12,4 +12,4 @@
 ## Диаграмма архитектуры сервиса
 ![Архитектура сервиса](./docs/architecture.png)
 
-[Md файл с диаграммами компонентов и последовательностей модуля уведомлений в job-core-service](./docs/Notification module in Job-Core-Service.md)
+* [Md файл с диаграммами компонентов и последовательностей модуля уведомлений в job-core-service](./docs/Notification module in Job-Core-Service.md)
